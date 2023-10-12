@@ -1,11 +1,28 @@
+import { ThemeProvider } from "@emotion/react";
 import {
-  Form,
   Links,
   LiveReload,
   Meta,
+  Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import styleCss from "app/app.css";
+import { type LinksFunction } from "@remix-run/node";
+import { createTheme } from "@mui/material";
+
+const theme = createTheme({
+  typography: {
+    fontFamily:
+      "-apple-system, BlinkMacSystemFont, 'Pretendard Variable', 'Pretendard',\
+      'Roboto', 'Noto Sans KR', 'Segoe UI', 'Oxygen', 'Ubuntu', 'Cantarell',\
+      'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+  },
+});
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: styleCss },
+];
 
 export default function App() {
   return (
@@ -17,34 +34,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <div id="sidebar">
-          <h1>Remix Contacts</h1>
-          <div>
-            <Form id="search-form" role="search">
-              <input
-                id="q"
-                aria-label="Search contacts"
-                placeholder="Search"
-                type="search"
-                name="q"
-              />
-              <div id="search-spinner" aria-hidden hidden={true} />
-            </Form>
-            <Form method="post">
-              <button type="submit">New</button>
-            </Form>
-          </div>
-          <nav>
-            <ul>
-              <li>
-                <a href={`/contacts/1`}>Your Name</a>
-              </li>
-              <li>
-                <a href={`/contacts/2`}>Your Friend</a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+        <ThemeProvider theme={theme}>
+          <Outlet />
+        </ThemeProvider>
 
         <ScrollRestoration />
         <Scripts />
