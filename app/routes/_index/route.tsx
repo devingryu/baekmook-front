@@ -1,6 +1,14 @@
+import { type LoaderFunctionArgs } from "@remix-run/node";
 
-const Index = () => {
-    return (<><h1>Index!!</h1></>)
+export async function loader({ request }: LoaderFunctionArgs) {
+    return ""
 }
+const Index = () => {
+  return (
+    <>
+      <h1>Index!!</h1>
+    </>
+  );
+};
 
-export default Index
+export default Index;

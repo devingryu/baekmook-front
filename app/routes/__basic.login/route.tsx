@@ -11,26 +11,47 @@ import {
 import ModeIcon from "@mui/icons-material/Mode";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { redirect, type ActionFunctionArgs } from "@remix-run/node";
+import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/node";
 import { type PostLoginRequest } from "app/apis/auth";
 import { formToObj } from "~/utils/util";
 import axios from "axios";
+import { commitSession, getSession } from "app/session";
+
+export async function loader({
+  request
+}: LoaderFunctionArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  )
+  if (session.has("token")) {
+    return redirect("/")
+  }
+
+  return null
+}
 
 export async function action({
   request,
 }: ActionFunctionArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  )
   const body = await request.formData()
   const req = formToObj(body) as PostLoginRequest | null
   if (req != null) {
     try {
-      await axios.post("http://localhost:30700/api/login", req)
-      return redirect('/')
+      const resp = await axios.post(`${process.env.API_URL}/api/login`, req)
+
+      session.flash("message", { text: `환영합니다, ${resp.data.me.name}님!`, type: 'success'})
+      session.set("userInfo", resp.data.me)
+      session.set("token", resp.data.token)
+      return redirect('/', {
+        headers: {
+          "Set-Cookie": await commitSession(session)
+        }
+      })
     } catch (err: any) {
-      if (err.response) {
-        return err.response.data.messageTranslated
-      } else {
-        return "알 수 없는 오류가 발생했습니다."
-      }
+      return err.response.data.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
     }
   }
 }

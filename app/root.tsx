@@ -9,9 +9,12 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 import styleCss from "app/app.css";
-import { json, type LinksFunction } from "@remix-run/node";
+import toastifyCss from 'react-toastify/dist/ReactToastify.css'
+import { json, type LinksFunction, type LoaderFunctionArgs } from "@remix-run/node";
 import { createTheme } from "@mui/material";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import { commitSession, getSession } from "app/session";
+import { useEffect } from "react";
 
 const theme = createTheme({
   typography: {
@@ -24,18 +27,47 @@ const theme = createTheme({
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styleCss },
+  { rel: "stylesheet", href: toastifyCss}
 ];
 
-export const loader = async () => {
-  return json({
-    ENV: {
-      API_URL: process.env.API_URL
+export async function loader({
+  request
+}: LoaderFunctionArgs) {
+  const session = await getSession(
+    request.headers.get("Cookie")
+  )
+
+  const message = session.get("message") || null
+
+  return json({ message }, {
+    headers: {
+      "Set-Cookie": await commitSession(session)
     }
   })
 }
 
 export default function App() {
-  const data = useLoaderData<typeof loader>();
+  const { message } = useLoaderData<typeof loader>();
+  useEffect(() => {
+    if (message != null) {
+      const duration = message.duration ?? 2000
+      switch (message.type) {
+        case 'info':
+          toast.info(message.text, {autoClose: duration})
+          break
+        case 'error':
+          toast.error(message.text, {autoClose: duration})
+          break
+        case 'success':
+          toast.success(message.text, {autoClose: duration})
+          break
+        case 'warning':
+          toast.warning(message.text, {autoClose: duration})
+          break
+      }
+    }
+  }, [message])
+  
   return (
     <html lang="en">
       <head>
@@ -45,13 +77,6 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.ENV = ${JSON.stringify(
-              data.ENV
-            )}`,
-          }}
-        />
         <ThemeProvider theme={theme}>
           <Outlet />
         </ThemeProvider>
