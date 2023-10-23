@@ -13,3 +13,8 @@ export const formToObj = (formData: FormData) => {
   });
   return object
 };
+
+export const objToForm = (obj: { [k: string]: any }) => Object.keys(obj).reduce((formData, key) => {
+  formData.append(key, obj[key])
+  return formData
+}, new FormData())

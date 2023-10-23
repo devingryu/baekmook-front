@@ -11,7 +11,7 @@ import {
 import ModeIcon from "@mui/icons-material/Mode";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs, json } from "@remix-run/node";
+import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { type PostLoginRequest } from "app/apis/auth";
 import { formToObj } from "~/utils/util";
 import axios from "axios";
