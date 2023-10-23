@@ -1,14 +1,5 @@
-import { redirect, type LoaderFunctionArgs } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
     return redirect('/home')
 }
-const Index = () => {
-  return (
-    <>
-      <h1>Index!!</h1>
-    </>
-  );
-};
-
-export default Index;

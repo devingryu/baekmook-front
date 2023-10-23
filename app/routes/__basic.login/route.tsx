@@ -45,13 +45,13 @@ export async function action({
       session.flash("message", { text: `환영합니다, ${resp.data.me.name}님!`, type: 'success'})
       session.set("userInfo", resp.data.me)
       session.set("token", resp.data.token)
-      return redirect('/', {
+      return redirect('/home', {
         headers: {
           "Set-Cookie": await commitSession(session)
         }
       })
     } catch (err: any) {
-      return err.response.data.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
+      return err.response?.data?.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
     }
   }
 }

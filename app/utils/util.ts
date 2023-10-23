@@ -1,3 +1,6 @@
+import { useMatches } from "@remix-run/react";
+import { type SessionData } from "~/session";
+
 export const formToObj = (formData: FormData) => {
   var object: { [k: string]: any } = {};
   formData.forEach((value, key) => {
@@ -18,3 +21,8 @@ export const objToForm = (obj: { [k: string]: any }) => Object.keys(obj).reduce(
   formData.append(key, obj[key])
   return formData
 }, new FormData())
+
+export const useAuth = () => {
+  const {userInfo, token} = useMatches()[0].data as SessionData
+  return {userInfo, token}
+}

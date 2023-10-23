@@ -2,7 +2,7 @@ import { createCookieSessionStorage } from "@remix-run/node";
 import type User from "app/common/User";
 import type ToastMessage from "app/common/ToastMessage";
 
-type SessionData = {
+export type SessionData = {
     userInfo: User
     token: string
 }
@@ -18,7 +18,7 @@ createCookieSessionStorage<SessionData, SessionFlashData>(
         cookie: {
             name: "__BAEKMOOKSESS",
             httpOnly: true,
-            maxAge: 60,
+            maxAge: 3600,
             path: "/",
             sameSite: "lax",
             secrets: [process.env.SESSION_SECRET || ''],

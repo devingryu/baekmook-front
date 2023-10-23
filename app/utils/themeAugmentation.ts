@@ -3,81 +3,145 @@ import { createTheme } from "@mui/material/styles";
 declare module "@mui/material/styles" {
   interface Theme {
     colors: {
+      m3: {
+        primary: string;
+        onPrimary: string;
+        primaryContainer: string;
+        onPrimaryContainer: string;
+        secondary: string;
+        onSecondary: string;
+        secondaryContainer: string;
+        onSecondaryContainer: string;
+        tertiary: string;
+        onTertiary: string;
+        tertiaryContainer: string;
+        onTertiaryContainer: string;
+        error: string;
+        errorContainer: string;
+        onError: string;
+        onErrorContainer: string;
+        background: string;
+        onBackground: string;
+        surface: string;
+        onSurface: string;
+        surfaceVariant: string;
+        onSurfaceVariant: string;
+        outline: string;
+        inverseOnSurface: string;
+        inverseSurface: string;
+        inversePrimary: string;
+        shadow: string;
+        surfaceTint: string;
+        outlineVariant: string;
+        scrim: string;
+      }
       primary: {
-        0: string; // "#000000",
-        10: string; // "#002203",
-        20: string; // "#003907",
-        25: string; // "#00460b",
-        30: string; // "#0b5313",
-        35: string; // "#1c5f1e",
-        40: string; // "#296b29",
-        50: string; // "#438540",
-        60: string; // "#5da057",
-        70: string; // "#76bb6f",
-        80: string; // "#91d888",
-        90: string; // "#acf4a2",
-        95: string; // "#c9ffbe",
-        98: string; // "#ecffe3",
-        99: string; // "#f6ffef",
-        100: string; // "#ffffff",
+        0: string;  
+        10: string; 
+        20: string; 
+        25: string; 
+        30: string; 
+        35: string; 
+        40: string; 
+        50: string; 
+        60: string; 
+        70: string; 
+        80: string; 
+        90: string; 
+        95: string; 
+        98: string; 
+        99: string; 
+        100: string;
       };
       secondary: {
-        0: string; // '#000000',
-        10: string; // '#111f0f',
-        20: string; // '#253423',
-        25: string; // '#303f2d',
-        30: string; // '#3b4b38',
-        35: string; // '#475743',
-        40: string; // '#53634e',
-        50: string; // '#6b7c66',
-        60: string; // '#85957f',
-        70: string; // '#9fb098',
-        80: string; // '#baccb3',
-        90: string; // '#d6e8ce',
-        95: string; // '#e4f6dc',
-        98: string; // '#edffe4',
-        99: string; // '#f6ffef',
-        100: string; // '#ffffff',
+        0: string;  
+        10: string; 
+        20: string; 
+        25: string; 
+        30: string; 
+        35: string; 
+        40: string; 
+        50: string; 
+        60: string; 
+        70: string; 
+        80: string; 
+        90: string; 
+        95: string; 
+        98: string; 
+        99: string; 
+        100: string;
       };
     };
   }
   interface ThemeOptions {
     colors?: {
+      m3?: {
+        primary: string;
+        onPrimary: string;
+        primaryContainer: string;
+        onPrimaryContainer: string;
+        secondary: string;
+        onSecondary: string;
+        secondaryContainer: string;
+        onSecondaryContainer: string;
+        tertiary: string;
+        onTertiary: string;
+        tertiaryContainer: string;
+        onTertiaryContainer: string;
+        error: string;
+        errorContainer: string;
+        onError: string;
+        onErrorContainer: string;
+        background: string;
+        onBackground: string;
+        surface: string;
+        onSurface: string;
+        surfaceVariant: string;
+        onSurfaceVariant: string;
+        outline: string;
+        inverseOnSurface: string;
+        inverseSurface: string;
+        inversePrimary: string;
+        shadow: string;
+        surfaceTint: string;
+        outlineVariant: string;
+        scrim: string;
+      }
       primary?: {
-        0?: string; // "#000000",
-        10?: string; // "#002203",
-        20?: string; // "#003907",
-        25?: string; // "#00460b",
-        30?: string; // "#0b5313",
-        35?: string; // "#1c5f1e",
-        40?: string; // "#296b29",
-        50?: string; // "#438540",
-        60?: string; // "#5da057",
-        70?: string; // "#76bb6f",
-        80?: string; // "#91d888",
-        90?: string; // "#acf4a2",
-        95?: string; // "#c9ffbe",
-        98?: string; // "#ecffe3",
-        99?: string; // "#f6ffef",
-        100?: string; // "#ffffff",
+        0?: string;  
+        10?: string; 
+        20?: string; 
+        25?: string; 
+        30?: string; 
+        35?: string; 
+        40?: string; 
+        50?: string; 
+        60?: string; 
+        70?: string; 
+        80?: string; 
+        90?: string; 
+        95?: string; 
+        98?: string; 
+        99?: string; 
+        100?: string;
       };
       secondary?: {
-        0?: string; // '#000000',
-        10?: string; // '#111f0f',
-        20?: string; // '#253423',
-        25?: string; // '#303f2d',
-        30?: string; // '#3b4b38',
-        35?: string; // '#475743',
-        40?: string; // '#53634e',
-        50?: string; // '#6b7c66',
-        60?: string; // '#85957f',
-        70?: string; // '#9fb098',
-        80?: string; // '#baccb3',
-        90?: string; // '#d6e8ce',
-        95?: string; // '#e4f6dc',
-        98?: string; // '#edffe4',
-        99?: string; // '#f6ffef',
-        100?: string; // '#ffffff',
+        0?: string;  
+        10?: string; 
+        20?: string; 
+        25?: string; 
+        30?: string; 
+        35?: string; 
+        40?: string; 
+        50?: string; 
+        60?: string; 
+        70?: string; 
+        80?: string; 
+        90?: string; 
+        95?: string; 
+        98?: string; 
+        99?: string; 
+        100?: string;
       };
     };
   }
@@ -85,6 +149,38 @@ declare module "@mui/material/styles" {
 
 export const lightTheme = createTheme({
   colors: {
+    m3: {
+      primary: '#296b29',
+      onPrimary: '#ffffff',
+      primaryContainer: '#acf4a2',
+      onPrimaryContainer: '#002203',
+      secondary: '#53634e',
+      onSecondary: '#ffffff',
+      secondaryContainer: '#d6e8ce',
+      onSecondaryContainer: '#111f0f',
+      tertiary: '#38656a',
+      onTertiary: '#ffffff',
+      tertiaryContainer: '#bcebf0',
+      onTertiaryContainer: '#002022',
+      error: '#ba1a1a',
+      errorContainer: '#ffdad6',
+      onError: '#ffffff',
+      onErrorContainer: '#410002',
+      background: '#fcfdf6',
+      onBackground: '#1a1c19',
+      surface: '#fcfdf6',
+      onSurface: '#1a1c19',
+      surfaceVariant: '#dee5d8',
+      onSurfaceVariant: '#42493f',
+      outline: '#73796f',
+      inverseOnSurface: '#f1f1eb',
+      inverseSurface: '#2f312d',
+      inversePrimary: '#91d888',
+      shadow: '#000000',
+      surfaceTint: '#296b29',
+      outlineVariant: '#c2c8bd',
+      scrim: '#000000',
+    },
     primary: {
       0: "#000000",
       10: "#002203",
@@ -137,6 +233,9 @@ export const lightTheme = createTheme({
       paper: "#fcfdf6",
       default: "#fcfdf6",
     },
+    text: {
+      primary: "#1a1c19"
+    }
   },
   typography: {
     fontFamily:

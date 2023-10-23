@@ -31,9 +31,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
 
   const message = session.get("message") || null;
+  const userInfo = session.get("userInfo") || null
+  const token = session.get("token") || null
 
   return json(
-    { message },
+    { message, userInfo, token },
     {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -46,19 +48,18 @@ export default function App() {
   const { message } = useLoaderData<typeof loader>();
   useEffect(() => {
     if (message != null) {
-      const duration = message.duration ?? 2000;
       switch (message.type) {
         case "info":
-          toast.info(message.text, { autoClose: duration });
+          toast.info(message.text, message.options);
           break;
         case "error":
-          toast.error(message.text, { autoClose: duration });
+          toast.error(message.text, message.options);
           break;
         case "success":
-          toast.success(message.text, { autoClose: duration });
+          toast.success(message.text, message.options);
           break;
         case "warning":
-          toast.warning(message.text, { autoClose: duration });
+          toast.warning(message.text, message.options);
           break;
       }
     }
@@ -83,7 +84,7 @@ export default function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
-        <ToastContainer />
+        <ToastContainer position="bottom-left" autoClose={2000} />
       </body>
     </html>
   );
