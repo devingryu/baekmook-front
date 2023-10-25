@@ -8,7 +8,7 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import ModeIcon from "@mui/icons-material/Mode";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   IconButton,
   Stack,
@@ -134,10 +134,10 @@ const Sidebar = () => {
   );
 };
 const TopBar = () => {
-  const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null)
-  const open = Boolean(anchorEl)
-  const auth = useAuth()
-  const submit = useSubmit()
+  const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
+  const open = Boolean(anchorEl);
+  const auth = useAuth();
+  const submit = useSubmit();
 
   const handleProfileClick = (event: React.MouseEvent<HTMLImageElement>) => {
     setAnchorEl(event.currentTarget);
@@ -146,9 +146,9 @@ const TopBar = () => {
     setAnchorEl(null);
   };
   const handleLogout = () => {
-    handlePopoverClose()
-    submit(null, { method: "post", action: "/logout" })
-  }
+    handlePopoverClose();
+    submit(null, { method: "post", action: "/logout" });
+  };
 
   return (
     <Box
@@ -208,7 +208,6 @@ const TopBar = () => {
                 style={{ borderRadius: "50%" }}
                 size={42}
                 email={auth.userInfo.email}
-                onClick={handleProfileClick}
               />
               <Stack direction="column" marginLeft={1}>
                 <Typography variant="body1" fontWeight="bold">
@@ -224,7 +223,11 @@ const TopBar = () => {
               variant="text"
               startIcon={<AccountCircleIcon />}
               fullWidth
-              sx={{ justifyContent: "flex-start", padding: "10px 0 10px 20px", fontSize: '15px' }}
+              sx={{
+                justifyContent: "flex-start",
+                padding: "10px 0 10px 20px",
+                fontSize: "15px",
+              }}
             >
               마이페이지
             </Button>
@@ -234,7 +237,11 @@ const TopBar = () => {
               fullWidth
               color="error"
               onClick={handleLogout}
-              sx={{ justifyContent: "flex-start", padding: "10px 0 10px 20px", fontSize: '15px' }}
+              sx={{
+                justifyContent: "flex-start",
+                padding: "10px 0 10px 20px",
+                fontSize: "15px",
+              }}
             >
               로그아웃
             </Button>
@@ -260,7 +267,9 @@ const Index = () => {
       <Sidebar />
       <TopBar />
       <div className="content">
-        <Outlet />
+        <Box sx={{ maxWidth: "1200px", margin: "0 auto" }}>
+          <Outlet />
+        </Box>
       </div>
     </>
   );
