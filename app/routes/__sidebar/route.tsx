@@ -138,6 +138,7 @@ const TopBar = () => {
   const open = Boolean(anchorEl);
   const auth = useAuth();
   const submit = useSubmit();
+  const theme = useTheme();
 
   const handleProfileClick = (event: React.MouseEvent<HTMLImageElement>) => {
     setAnchorEl(event.currentTarget);
@@ -156,8 +157,13 @@ const TopBar = () => {
         display: "flex",
         height: "64px",
         padding: "0 16px 0 0",
-        marginBottom: "16px",
         alignItems: "center",
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        background: theme.colors.m3.surface,
+        opacity: 0.9,
       }}
     >
       <IconButton sx={{ width: "36px", height: "36px", margin: "0 18px" }}>
@@ -266,7 +272,7 @@ const Index = () => {
     <>
       <Sidebar />
       <TopBar />
-      <div className="content">
+      <div className="content" style={{ marginLeft: "72px" }}>
         <Box sx={{ maxWidth: "1200px", margin: "0 auto" }}>
           <Outlet />
         </Box>
