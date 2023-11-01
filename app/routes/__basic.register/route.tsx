@@ -41,7 +41,7 @@ export async function action({
         }
       })
     } catch (err: any) {
-      return err.response.data.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
+      return err.response?.data?.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
     }
   }
 }

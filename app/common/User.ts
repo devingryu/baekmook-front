@@ -3,6 +3,6 @@ export default interface User {
   email: string,
   name: string,
   studentId: string,
-  role?: string,
+  role?: "master" | "lecturer" | "student",
   createdDate?: number,
 }
