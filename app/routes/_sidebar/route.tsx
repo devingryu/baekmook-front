@@ -1,6 +1,6 @@
 import { type LinksFunction } from "@remix-run/node";
 import { Link, Outlet, useLocation, useSubmit } from "@remix-run/react";
-import sidebarCss from "app/routes/__sidebar/style.css";
+import sidebarCss from "app/routes/_sidebar/style.css";
 import Gravatar from "react-gravatar";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -120,14 +120,8 @@ const Sidebar = () => {
         <SidebarItem
           Icon={HistoryEduIcon}
           linkTo="/lectures"
-          isSelected={loc.pathname === "/lectures"}
-          caption="내 강의"
-        />
-        <SidebarItem
-          Icon={AssignmentIndIcon}
-          linkTo="/enroll"
-          isSelected={loc.pathname === "/enroll"}
-          caption="수강신청"
+          isSelected={loc.pathname.startsWith('/lectures')}
+          caption="강의"
         />
       </Stack>
     </div>
