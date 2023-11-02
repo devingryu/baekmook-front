@@ -28,7 +28,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const resp = await axios.get<LecturesResponse>(
-      `${process.env.API_URL}/api/v1/lecture/`,
+      `${process.env.API_URL}/api/v1/lecture`,
       {
         headers: {
           Authorization: session.get("token"),
