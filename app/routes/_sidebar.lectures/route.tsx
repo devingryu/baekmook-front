@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Link, Outlet, useLocation } from "@remix-run/react";
 import { useAuth } from "~/utils/util";
 import AddIcon from "@mui/icons-material/Add";
@@ -6,6 +6,8 @@ import AddIcon from "@mui/icons-material/Add";
 const Index = () => {
   const auth = useAuth();
   const isStudent = auth.userInfo.role != "lecturer";
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const loc = useLocation();
   const tabs = isStudent
     ? [
@@ -29,7 +31,7 @@ const Index = () => {
       <Box display="flex" alignItems="center" sx={{ mb: 2 }}>
         {tabs.map((it, index) => (
           <Typography
-            variant="h4"
+            variant={isMobile? "h5" : "h4"}
             fontWeight="bold"
             key={it.link}
             component={Link}
@@ -43,11 +45,11 @@ const Index = () => {
               loc.pathname != it.link && {
                 opacity: "0.3",
                 "&:hover": {
-                  opacity: "0.7",
+                  opacity: "0.6",
                 },
               },
               index != 0 && {
-                ml: 2,
+                ml: isMobile ? 1 : 2,
               },
             ]}
           >

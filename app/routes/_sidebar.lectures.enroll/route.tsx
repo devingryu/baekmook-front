@@ -7,7 +7,7 @@ import ModeIcon from "@mui/icons-material/Mode";
 import { type LoaderFunctionArgs, redirect, json } from "@remix-run/node";
 import { commitSession, getSession } from "~/session";
 import axios from "axios";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
 
@@ -49,11 +49,12 @@ const Index = () => {
   const data = useLoaderData<typeof loader>();
   const lectures = data?.data?.lectures;
   const theme = useTheme();
+  const navigate = useNavigate()
 
   return (
     <>
       {lectures ? (
-        <LectureList lectures={lectures} />
+        <LectureList lectures={lectures} showChip={true} onClick={(id) => navigate(`/lectures/${id}`)}/>
       ) : (
         <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>
           <ModeIcon

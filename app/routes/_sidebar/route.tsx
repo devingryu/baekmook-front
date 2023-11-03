@@ -4,7 +4,6 @@ import sidebarCss from "app/routes/_sidebar/style.css";
 import Gravatar from "react-gravatar";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
-import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import HistoryEduIcon from "@mui/icons-material/HistoryEdu";
 import ModeIcon from "@mui/icons-material/Mode";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -19,6 +18,7 @@ import {
   Button,
   Popover,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import { type OverridableComponent } from "@mui/material/OverridableComponent";
 import { useAuth } from "~/utils/util";
@@ -34,6 +34,10 @@ type SidebarItemProps = {
   isSelected: boolean;
   caption: string;
 };
+
+interface TopBarProps {
+  isMobile: boolean
+}
 
 const SidebarItem = ({
   Icon,
@@ -127,7 +131,7 @@ const Sidebar = () => {
     </div>
   );
 };
-const TopBar = () => {
+const TopBar = ({isMobile}: TopBarProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLImageElement | null>(null);
   const open = Boolean(anchorEl);
   const auth = useAuth();
@@ -160,7 +164,7 @@ const TopBar = () => {
         opacity: 0.9,
       }}
     >
-      <IconButton sx={{ width: "36px", height: "36px", margin: "0 18px" }}>
+      <IconButton sx={{ width: "36px", height: "36px", margin: isMobile ? "0 8px 0 12px" : "0 18px" }}>
         <MenuIcon />
       </IconButton>
       <ModeIcon sx={{ height: "36px", width: "36px" }} />
@@ -262,11 +266,13 @@ const TopBar = () => {
   );
 };
 const Index = () => {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   return (
     <>
-      <Sidebar />
-      <TopBar />
-      <div className="content" style={{ marginLeft: "72px" }}>
+      {!isMobile && <Sidebar />}
+      <TopBar isMobile={isMobile}/>
+      <div className="content" style={{ marginLeft: isMobile ? 0 : "72px" }}>
         <Box sx={{ maxWidth: "1200px", margin: "0 auto" }}>
           <Outlet />
         </Box>

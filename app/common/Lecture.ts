@@ -5,8 +5,8 @@ export interface Lecture {
     name: string,
     description?: string,
     lecturers: User[],
-    isInvolved: boolean,
-    isLecturer: boolean,
+    involved: boolean,
+    lecturer: boolean,
 }
 
 export default interface LecturesResponse {

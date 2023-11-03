@@ -9,19 +9,22 @@ import {
 } from "@mui/material";
 import { type Lecture } from "~/common/Lecture";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import Chip from "~/component/Chip";
 
 export interface LectureListProps {
-  lectures: Lecture[]
+  lectures: Lecture[];
+  showChip?: boolean
+  onClick?: (id: number) => void
 }
 
-const LectureList = ({lectures}: LectureListProps) => {
+const LectureList = ({ lectures, showChip, onClick }: LectureListProps) => {
   const theme = useTheme();
   return (
     <Grid container spacing={0.5}>
       {lectures.map((it, index) => (
         <Grid item xs={12} key={index}>
           <Card variant="outlined">
-            <CardActionArea sx={{ p: 1.5 }}>
+            <CardActionArea sx={{ p: 1.5 }} onClick={() => onClick?.(it.id)}>
               <Box display="flex">
                 <Stack direction="column">
                   <Typography
@@ -36,21 +39,24 @@ const LectureList = ({lectures}: LectureListProps) => {
                   >
                     {it.name}
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    color={theme.colors.m3.onSurfaceVariant}
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      display: "-webkit-box",
-                      WebkitLineClamp: "1",
-                      WebkitBoxOrient: "vertical",
-                    }}
-                  >
-                    {it.lecturers.reduce((acc, curr) => {
-                      return acc ? acc + ", " + curr.name : curr.name;
-                    }, "")}
-                  </Typography>
+                  <Stack direction="row" spacing={0.7}>
+                    <Typography
+                      variant="body2"
+                      color={theme.colors.m3.onSurfaceVariant}
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        display: "-webkit-box",
+                        WebkitLineClamp: "1",
+                        WebkitBoxOrient: "vertical",
+                      }}
+                    >
+                      {it.lecturers.reduce((acc, curr) => {
+                        return acc ? acc + ", " + curr.name : curr.name;
+                      }, "")}
+                    </Typography>
+                    {showChip && it.involved && (<Chip sx={{ fontSize: "11px" }}>수강중</Chip>)}
+                  </Stack>
                 </Stack>
                 <ChevronRightIcon
                   sx={{
