@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Fab,
   Stack,
   Tab,
   Tabs,
@@ -10,10 +11,13 @@ import {
 } from "@mui/material";
 import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
 import {
+  Link,
   Outlet,
   useLoaderData,
   useLocation,
+  useMatches,
   useNavigate,
+  useParams,
 } from "@remix-run/react";
 import axios from "axios";
 import { type Lecture } from "~/common/Lecture";
@@ -21,6 +25,7 @@ import { getSession, commitSession } from "~/session";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import Gravatar from "react-gravatar";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import ModeIcon from "@mui/icons-material/Mode";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -55,9 +60,14 @@ const Index = () => {
   const theme = useTheme();
   const nav = useNavigate();
   const loc = useLocation();
-  const handleMoveBack = () => nav(-1);
+  const matches = useMatches()
+  const params = useParams()
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   const useTab = !loc.pathname.endsWith("write");
+  const useFab = matches[matches.length - 1]?.id == "routes/_sidebar.lectures_.$id._index"
+
+  const handleMoveBack = () => nav(-1);
 
   return (
     <>
@@ -82,14 +92,14 @@ const Index = () => {
             </Typography>
           )}
           <Stack direction="row" alignItems="center">
-            {lecture.lecturers.map(it => (
-              <Box sx={{display: 'flex', alignItems: 'center'}} key={it.id}>
+            {lecture.lecturers.map((it) => (
+              <Box sx={{ display: "flex", alignItems: "center" }} key={it.id}>
                 <Gravatar
                   style={{ borderRadius: "50%" }}
                   size={20}
                   email={it.email}
                 />
-                <Typography  variant="subtitle1" sx={{ ml: 0.5, mr: 1 }}>
+                <Typography variant="subtitle1" sx={{ ml: 0.5, mr: 1 }}>
                   {it.name}
                 </Typography>
               </Box>
@@ -120,10 +130,27 @@ const Index = () => {
                   </Tabs>
                 </Box>
               ) : (
-                <Box sx={{ borderBottom: 1, borderColor: "divider", m: '8px 0'}}></Box>
+                <Box
+                  sx={{ borderBottom: 1, borderColor: "divider", m: "8px 0" }}
+                ></Box>
               )}
               <Outlet />
             </>
+          )}
+          {lecture.lecturer && useFab && (
+            <Fab
+              color="secondary"
+              sx={{
+                m: 0,
+                position: "fixed",
+                right: theme.spacing(2),
+                bottom: theme.spacing(2),
+              }}
+              component={Link}
+              to={`/lectures/${params.id}/write`}
+            >
+              <ModeIcon />
+            </Fab>
           )}
         </>
       ) : (

@@ -77,6 +77,7 @@ const Index = () => {
           </CardContent>
         </Card>
       ))}
+      
     </>
   ) : (
     <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>

@@ -66,7 +66,7 @@ const Index = () => {
   const nav = useNavigate();
   const quillStyle = useTypographyStyles()
   const lecture = (
-    matches[matches.length - 2].data as { lecture: Lecture } | undefined
+    matches?.find(e => e.id == "routes/_sidebar.lectures_.$id")?.data as { lecture: Lecture } | undefined
   )?.lecture;
 
   const handleMoveBack = () => nav(-1);
