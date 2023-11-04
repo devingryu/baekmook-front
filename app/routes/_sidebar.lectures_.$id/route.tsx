@@ -1,6 +1,11 @@
 import {
   Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Fab,
   Stack,
   Tab,
@@ -9,7 +14,12 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
+import {
+  redirect,
+  type LoaderFunctionArgs,
+  json,
+  ActionFunctionArgs,
+} from "@remix-run/node";
 import {
   Link,
   Outlet,
@@ -18,6 +28,7 @@ import {
   useMatches,
   useNavigate,
   useParams,
+  useSubmit,
 } from "@remix-run/react";
 import axios from "axios";
 import { type Lecture } from "~/common/Lecture";
@@ -26,6 +37,8 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import Gravatar from "react-gravatar";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ModeIcon from "@mui/icons-material/Mode";
+import { formToObj, objToForm } from "~/utils/util";
+import { useState } from "react";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -54,20 +67,85 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 }
 
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+  if (!session.has("token")) {
+    session.flash("message", { text: "로그인이 필요합니다.", type: "error" });
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+
+  const body = await request.formData();
+  const req = formToObj(body);
+  console.log(req);
+
+  if (req.lectureId) {
+  try {
+    await axios.post(`${process.env.API_URL}/api/v1/lecture/join`, req, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: session.get("token"),
+      },
+    });
+
+    session.flash("message", {
+      text: "수강신청이 완료되었습니다!",
+      type: "success",
+    });
+    return json(null, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  } catch (err: any) {
+    session.flash("message", {
+      text:
+        err.response?.data?.messageTranslated ??
+        "알 수 없는 오류가 발생했습니다.",
+      type: "error",
+    });
+    return json(null, {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
+  }
+} else {
+  return null
+}
+}
+
 const Index = () => {
   const data = useLoaderData<typeof loader>();
   const lecture = data?.lecture;
   const theme = useTheme();
   const nav = useNavigate();
   const loc = useLocation();
-  const matches = useMatches()
-  const params = useParams()
+  const matches = useMatches();
+  const params = useParams();
+  const submit = useSubmit();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const [openEnrollDialog, setOpenEnrollDialog] = useState(false);
+
   const useTab = !loc.pathname.endsWith("write");
-  const useFab = matches[matches.length - 1]?.id == "routes/_sidebar.lectures_.$id._index"
+  const useFab =
+    matches[matches.length - 1]?.id == "routes/_sidebar.lectures_.$id._index";
 
   const handleMoveBack = () => nav(-1);
+  const handleOpenEnrollDialog = () => {
+    setOpenEnrollDialog(true);
+  };
+  const handleDismissEnrollDialog = () => {
+    setOpenEnrollDialog(false);
+  };
+  const handleConfirmEnrollDialog = () => {
+    submit(objToForm({ lectureId: params.id }), { method: "post" });
+    setOpenEnrollDialog(false);
+  };
 
   return (
     <>
@@ -110,6 +188,7 @@ const Index = () => {
               variant="contained"
               disableElevation
               startIcon={<AddShoppingCartIcon />}
+              onClick={handleOpenEnrollDialog}
               sx={{ m: "16px 0" }}
             >
               수강신청
@@ -152,6 +231,25 @@ const Index = () => {
               <ModeIcon />
             </Fab>
           )}
+          <Dialog open={openEnrollDialog} onClose={handleDismissEnrollDialog}>
+            <DialogTitle>수강신청하시겠습니까?</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                한 번 수강신청하면 취소할 수 없습니다.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={handleDismissEnrollDialog}
+                sx={{ color: theme.colors.m3.outlineVariant }}
+              >
+                취소
+              </Button>
+              <Button onClick={handleConfirmEnrollDialog} autoFocus>
+                수강신청
+              </Button>
+            </DialogActions>
+          </Dialog>
         </>
       ) : (
         <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>

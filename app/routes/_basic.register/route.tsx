@@ -22,26 +22,28 @@ import { commitSession, getSession } from "~/session";
 import axios from "axios";
 import { type PostRegisterRequest } from "app/apis/auth";
 
-export async function action({
-  request,
-}: ActionFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  )
-  const body = await request.formData()
-  const req = formToObj(body) as PostRegisterRequest | null
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+  const body = await request.formData();
+  const req = formToObj(body) as PostRegisterRequest | null;
   if (req != null) {
     try {
-      await axios.post(`${process.env.API_URL}/api/register`, req)
+      await axios.post(`${process.env.API_URL}/api/register`, req);
 
-      session.flash("message", { text: `가입이 완료되었습니다!`, type: 'success'})
-      return redirect('/login', {
+      session.flash("message", {
+        text: `가입이 완료되었습니다!`,
+        type: "success",
+      });
+      return redirect("/login", {
         headers: {
-          "Set-Cookie": await commitSession(session)
-        }
-      })
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     } catch (err: any) {
-      return err.response?.data?.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
+      return (
+        err.response?.data?.messageTranslated ??
+        "알 수 없는 오류가 발생했습니다."
+      );
     }
   }
 }
@@ -72,8 +74,8 @@ const Index = () => {
 };
 
 const CardContent = () => {
-  const submit = useSubmit()
-  const actionData = useActionData<typeof action>()
+  const submit = useSubmit();
+  const actionData = useActionData<typeof action>();
   const [inputs, setInputs] = useState({
     email: "",
     name: "",
@@ -94,8 +96,11 @@ const CardContent = () => {
     target: { name, value },
   }: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [name]: value }));
-    if (name == 'passwordCheck') {
-      setErrFlag((prev) => ({ ...prev, passwordCheck: inputs.password != value }))
+    if (name == "passwordCheck") {
+      setErrFlag((prev) => ({
+        ...prev,
+        passwordCheck: inputs.password != value,
+      }));
     }
   };
   const runValidation = () => {
@@ -105,12 +110,21 @@ const CardContent = () => {
       password: inputs.password.length <= 0,
       passwordCheck: inputs.password != inputs.passwordCheck,
       studentId: inputs.studentId.length <= 0,
-    }))
-    return !Object.values(errFlag).includes(true)
-  }
+    }));
+    return !Object.values(errFlag).includes(true);
+  };
   const onSubmit = () => {
-    runValidation() && submit(objToForm((({passwordCheck, position, ...o}) => ({...o, isLecturer: position === 'lecturer'}))(inputs)), {method: 'post'})
-  }
+    runValidation() &&
+      submit(
+        objToForm(
+          (({ passwordCheck, position, ...o }) => ({
+            ...o,
+            isLecturer: position === "lecturer",
+          }))(inputs)
+        ),
+        { method: "post" }
+      );
+  };
 
   return (
     <Stack direction="column" spacing={2.5}>
@@ -193,7 +207,11 @@ const CardContent = () => {
           />
         </RadioGroup>
       </FormControl>
-      {actionData && <Typography variant="body2" color="red">{actionData}</Typography>}
+      {actionData && (
+        <Typography variant="body2" color="red">
+          {actionData}
+        </Typography>
+      )}
       <Button
         variant="contained"
         disableElevation

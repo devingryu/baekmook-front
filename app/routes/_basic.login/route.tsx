@@ -12,7 +12,6 @@ import ModeIcon from "@mui/icons-material/Mode";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
-import { type PostLoginRequest } from "app/apis/auth";
 import { formToObj } from "~/utils/util";
 import axios from "axios";
 import { commitSession, getSession } from "app/session";
@@ -37,7 +36,7 @@ export async function action({
     request.headers.get("Cookie")
   )
   const body = await request.formData()
-  const req = formToObj(body) as PostLoginRequest | null
+  const req = formToObj(body)
   if (req != null) {
     try {
       const resp = await axios.post(`${process.env.API_URL}/api/login`, req)
