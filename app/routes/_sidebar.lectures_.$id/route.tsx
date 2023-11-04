@@ -9,7 +9,12 @@ import {
   useTheme,
 } from "@mui/material";
 import { redirect, type LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import {
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useNavigate,
+} from "@remix-run/react";
 import axios from "axios";
 import { type Lecture } from "~/common/Lecture";
 import { getSession, commitSession } from "~/session";
@@ -38,7 +43,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       }
     );
 
-    return json({ data: resp.data });
+    return json({ lecture: resp.data });
   } catch (err: any) {
     return json(null);
   }
@@ -46,11 +51,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 const Index = () => {
   const data = useLoaderData<typeof loader>();
-  const lecture = data?.data;
+  const lecture = data?.lecture;
   const theme = useTheme();
   const nav = useNavigate();
+  const loc = useLocation();
   const handleMoveBack = () => nav(-1);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const useTab = !loc.pathname.endsWith("write");
 
   return (
     <>
@@ -75,17 +82,17 @@ const Index = () => {
             </Typography>
           )}
           <Stack direction="row" alignItems="center">
-            {lecture.lecturers.map((it, _idx) => (
-              <>
+            {lecture.lecturers.map(it => (
+              <Box sx={{display: 'flex', alignItems: 'center'}} key={it.id}>
                 <Gravatar
                   style={{ borderRadius: "50%" }}
                   size={20}
                   email={it.email}
                 />
-                <Typography variant="subtitle1" sx={{ ml: 0.5, mr: 1 }}>
+                <Typography  variant="subtitle1" sx={{ ml: 0.5, mr: 1 }}>
                   {it.name}
                 </Typography>
-              </>
+              </Box>
             ))}
           </Stack>
           {!lecture.involved && (
@@ -100,12 +107,22 @@ const Index = () => {
           )}
           {lecture.involved && (
             <>
-              <Box sx={{ borderBottom: 1, borderColor: "divider", position: 'sticky' }} >
-                <Tabs value={0}>
-                <Tab label="공지사항" />
-                </Tabs>
-                
-              </Box>
+              {useTab ? (
+                <Box
+                  sx={{
+                    borderBottom: 1,
+                    borderColor: "divider",
+                    position: "sticky",
+                  }}
+                >
+                  <Tabs value={0}>
+                    <Tab label="공지사항" />
+                  </Tabs>
+                </Box>
+              ) : (
+                <Box sx={{ borderBottom: 1, borderColor: "divider", m: '8px 0'}}></Box>
+              )}
+              <Outlet />
             </>
           )}
         </>

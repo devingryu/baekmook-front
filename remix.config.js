@@ -4,5 +4,6 @@ module.exports = {
   serverModuleFormat: "cjs",
   env: {
     API_URL: process.env.API_URL
-  }
+  },
+  serverDependenciesToBundle: ["remix-utils/client-only"]
 };
