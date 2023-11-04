@@ -20,8 +20,6 @@ import { commitSession, getSession } from "app/session";
 import { useEffect } from "react";
 import { lightTheme } from "app/utils/themeAugmentation";
 
-
-
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: styleCss },
   { rel: "stylesheet", href: toastifyCss },

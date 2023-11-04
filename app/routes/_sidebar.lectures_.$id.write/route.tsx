@@ -20,7 +20,7 @@ import { type Lecture } from "~/common/Lecture";
 import { TextEditor } from "~/component/TextEditor.client";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session";
-import { formToObj } from "~/utils/util";
+import { formToObj, useTypographyStyles } from "~/utils/util";
 import axios from "axios";
 
 export const links: LinksFunction = () => [
@@ -64,6 +64,7 @@ const Index = () => {
   const matches = useMatches();
   const theme = useTheme();
   const nav = useNavigate();
+  const quillStyle = useTypographyStyles()
   const lecture = (
     matches[matches.length - 2].data as { lecture: Lecture } | undefined
   )?.lecture;
@@ -74,7 +75,8 @@ const Index = () => {
     <Box
       sx={{
         ".ql-editor": {
-          minHeight: "300px",
+          ...quillStyle,
+          minHeight: "300px"
         },
       }}
     >
