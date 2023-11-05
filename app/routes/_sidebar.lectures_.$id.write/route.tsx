@@ -31,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   const body = await request.formData();
   const req = formToObj(body);
-  console.log(req)
+
   if (req?.lectureId) {
     try {
       await axios.post(

@@ -86,7 +86,6 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     await axios.post(`${process.env.API_URL}/api/v1/lecture/join`, req, {
       headers: {
-        "Content-Type": "application/json",
         Authorization: session.get("token"),
       },
     });
