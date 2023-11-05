@@ -21,7 +21,7 @@ import { TextEditor } from "~/component/TextEditor.client";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session";
 import { formToObj, useTypographyStyles } from "~/utils/util";
-import api, { processResponse } from "~/axios.server";
+import processResponse from "~/axios.server";
 import { STRING_UNKNOWN_ERROR } from "~/resources/strings";
 
 export const links: LinksFunction = () => [
@@ -34,26 +34,29 @@ export async function action({ request }: ActionFunctionArgs) {
   const req = formToObj(body);
 
   if (req?.lectureId) {
-    const resp = await processResponse(
-      () =>
-        api.post(`${process.env.API_URL}/api/v1/lecture/write-post`, req, {
-          headers: {
-            Authorization: session.get("token"),
-          },
-        }),
+    const { newSession, ...resp } = await processResponse(
+      { method: "post", url: '/api/v1/lecture/write-post', data: req },
       session
     );
 
     if (resp.data) {
-      return redirect(`/lectures/${req.lectureId}`);
+      return redirect(
+        `/lectures/${req.lectureId}`,
+        newSession && {
+          headers: {
+            "Set-Cookie": await commitSession(newSession),
+          },
+        }
+      );
     } else {
-      session.flash("message", {
+      const targetSession = newSession ?? session;
+      targetSession.flash("message", {
         text: resp.error?.messageTranslated ?? STRING_UNKNOWN_ERROR,
         type: "error",
       });
       return json(null, {
         headers: {
-          "Set-Cookie": await commitSession(session),
+          "Set-Cookie": await commitSession(targetSession),
         },
       });
     }

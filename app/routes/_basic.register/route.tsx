@@ -20,7 +20,7 @@ import { formToObj, objToForm } from "app/utils/util";
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/session";
 import { type PostRegisterRequest } from "app/apis/auth";
-import api from "~/axios.server";
+import { api } from "~/axios.server";
 import { STRING_REGISTER_COMPLETE } from "~/resources/strings";
 
 export async function action({ request }: ActionFunctionArgs) {

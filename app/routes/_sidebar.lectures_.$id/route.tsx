@@ -18,7 +18,7 @@ import {
   redirect,
   type LoaderFunctionArgs,
   json,
-  ActionFunctionArgs,
+  type ActionFunctionArgs
 } from "@remix-run/node";
 import {
   Link,
@@ -43,7 +43,7 @@ import {
   STRING_LOGIN_REQUIRED,
   STRING_UNKNOWN_ERROR,
 } from "~/resources/strings";
-import api, { processResponse } from "~/axios.server";
+import processResponse from "~/axios.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -56,13 +56,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     });
   }
 
-  const resp = await processResponse(
-    () =>
-      api.get<Lecture>(`${process.env.API_URL}/api/v1/lecture/${params.id}`, {
-        headers: {
-          Authorization: session.get("token"),
-        },
-      }),
+  const { newSession, ...resp } = await processResponse<Lecture>(
+    { method: "get", url: `/api/v1/lecture/${params.id}` },
     session
   );
 
@@ -82,20 +77,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const body = await request.formData();
   const req = formToObj(body);
-  console.log(req);
 
   if (req.lectureId) {
-    const resp = await processResponse(
-      () =>
-        api.post(`${process.env.API_URL}/api/v1/lecture/join`, req, {
-          headers: {
-            Authorization: session.get("token"),
-          },
-        }),
+    const { newSession, ...resp } = await processResponse(
+      { method: "post", url: "/api/v1/lecture/join", data: req },
       session
     );
 
-    session.flash("message", {
+    const targetSession = newSession ?? session;
+    targetSession.flash("message", {
       text: resp.data
         ? STRING_LECTURE_ENROLL_COMPLETED
         : resp.error?.messageTranslated ?? STRING_UNKNOWN_ERROR,
@@ -103,7 +93,7 @@ export async function action({ request }: ActionFunctionArgs) {
     });
     return json(null, {
       headers: {
-        "Set-Cookie": await commitSession(session),
+        "Set-Cookie": await commitSession(targetSession),
       },
     });
   } else {

@@ -10,12 +10,12 @@ import {
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { type Post } from "~/apis/post";
-import { getSession } from "~/session";
+import { commitSession, getSession } from "~/session";
 import ModeIcon from "@mui/icons-material/Mode";
 import Gravatar from "react-gravatar";
 import { useTypographyStyles } from "~/utils/util";
 import { sanitize } from "isomorphic-dompurify";
-import api, { processResponse } from "~/axios.server";
+import processResponse from "~/axios.server";
 import { STRING_NOTICE_EMPTY } from "~/resources/strings";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -24,20 +24,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return json({ data: null, error: null });
   }
 
-  const resp = await processResponse(
-    () =>
-      api.get<Post[]>(
-        `${process.env.API_URL}/api/v1/lecture/${params.id}/posts`,
-        {
-          headers: {
-            Authorization: session.get("token"),
-          },
-        }
-      ),
+  const { newSession, ...resp } = await processResponse<Post[]>(
+    { method: "get", url: `/api/v1/lecture/${params.id}/posts` },
     session
   );
 
-  return json(resp);
+  return json(
+    resp,
+    newSession && {
+      headers: {
+        "Set-Cookie": await commitSession(newSession),
+      },
+    }
+  );
 }
 
 const Index = () => {

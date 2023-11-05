@@ -15,7 +15,7 @@ import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@rem
 import { formToObj } from "~/utils/util";
 import { commitSession, getSession } from "app/session";
 import { type AuthInfo } from "~/common/User";
-import api from "~/axios.server";
+import { api } from "~/axios.server";
 
 export async function loader({
   request

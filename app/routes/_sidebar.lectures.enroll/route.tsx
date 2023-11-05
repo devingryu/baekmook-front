@@ -6,7 +6,7 @@ import { useLoaderData, useNavigate } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
 import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
-import api, { processResponse } from "~/axios.server";
+import processResponse from "~/axios.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -19,17 +19,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   }
 
-  const resp = await processResponse(
-    () =>
-      api.get<LecturesResponse>(`/api/v1/lecture`, {
-        headers: {
-          Authorization: session.get("token"),
-        },
-      }),
+  const { newSession, ...resp } = await processResponse<LecturesResponse>(
+    { method: "get", url: `/api/v1/lecture` },
     session
   );
 
-  return json(resp);
+  return json(
+    resp,
+    newSession && {
+      headers: {
+        "Set-Cookie": await commitSession(newSession),
+      },
+    }
+  );
 }
 
 const Index = () => {

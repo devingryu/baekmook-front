@@ -1,5 +1,5 @@
-import { type Session, redirect, json } from "@remix-run/node";
-import axios, { type AxiosResponse } from "axios";
+import { type Session, redirect } from "@remix-run/node";
+import axios, { type AxiosRequestConfig } from "axios";
 import { type PostLoginResponse } from "~/apis/auth";
 import type BaseResponse from "~/apis/serverError";
 import { isBaseResponse } from "~/apis/serverError";
@@ -8,7 +8,7 @@ import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
 import type { SessionData, SessionFlashData } from "~/session";
 import { commitSession, destroySession, getSession } from "~/session";
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: process.env.API_URL,
   headers: {
     "Content-Type": "application/json",
@@ -20,11 +20,18 @@ const postLogin = async (authInfo: AuthInfo) => {
 };
 
 export async function processResponse<T>(
-  requestFunc: () => Promise<AxiosResponse<T, any>>,
+  config: AxiosRequestConfig<any>,
   session?: Session<SessionData, SessionFlashData>
-): Promise<{ data?: T; error?: BaseResponse }> {
+): Promise<{
+  data?: T;
+  error?: BaseResponse;
+  newSession?: Session<SessionData, SessionFlashData>;
+}> {
   try {
-    const resp = await requestFunc();
+    const resp = await api.request({
+      ...config,
+      ...(session ? { headers: { Authorization: session.get("token") } } : {}),
+    });
     return { data: resp.data };
   } catch (err: any) {
     const data = err.response?.data;
@@ -33,32 +40,23 @@ export async function processResponse<T>(
       if (data.errClazz === "access_token_invalid_exception" && authInfo) {
         // try to retrieve new token from server
         try {
-          const resp = await postLogin(authInfo);
-          session.set("userInfo", resp.data.me);
-          session.set("token", resp.data.token);
+          const loginResp = await postLogin(authInfo);
+          session.set("userInfo", loginResp.data.me);
+          session.set("token", loginResp.data.token);
 
           // retry original request
           try {
-            const resp = await requestFunc();
-            throw json({data: resp.data}, {
-              headers: {
-                "Set-Cookie": await commitSession(session),
-              },
+            const resp = await api.request({
+              ...config,
+              headers: { Authorization: loginResp.data.token },
             });
+            return { data: resp.data, newSession: session };
           } catch (err: any) {
-            const data = err.response?.data;
-            if (isBaseResponse(data)) {
-              throw json({data: data}, {
-                headers: {
-                  "Set-Cookie": await commitSession(session),
-                },
-              });
+            const error = err.response?.data;
+            if (isBaseResponse(error)) {
+              return { error: error, newSession: session };
             } else {
-              throw json({}, {
-                headers: {
-                  "Set-Cookie": await commitSession(session),
-                },
-              });
+              return { newSession: session };
             }
           }
         } catch (err: any) {
@@ -72,7 +70,7 @@ export async function processResponse<T>(
           });
         }
       } else {
-        return {error: data};
+        return { error: data };
       }
     } else {
       return {};
@@ -80,4 +78,4 @@ export async function processResponse<T>(
   }
 }
 
-export default api;
+export default processResponse;
