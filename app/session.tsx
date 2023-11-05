@@ -20,7 +20,7 @@ createCookieSessionStorage<SessionData, SessionFlashData>(
         cookie: {
             name: "__BAEKMOOKSESS",
             httpOnly: true,
-            maxAge: 3600,
+            maxAge: 1209600,
             path: "/",
             sameSite: "lax",
             secrets: [process.env.SESSION_SECRET || ''],
