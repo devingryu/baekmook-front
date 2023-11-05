@@ -21,7 +21,8 @@ import { TextEditor } from "~/component/TextEditor.client";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session";
 import { formToObj, useTypographyStyles } from "~/utils/util";
-import axios from "axios";
+import api, { processResponse } from "~/axios.server";
+import { STRING_UNKNOWN_ERROR } from "~/resources/strings";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: quillCss },
@@ -33,24 +34,23 @@ export async function action({ request }: ActionFunctionArgs) {
   const req = formToObj(body);
 
   if (req?.lectureId) {
-    try {
-      await axios.post(
-        `${process.env.API_URL}/api/v1/lecture/write-post`,
-        req,
-        {
+    const resp = await processResponse(
+      () =>
+        api.post(`${process.env.API_URL}/api/v1/lecture/write-post`, req, {
           headers: {
             Authorization: session.get("token"),
           },
-        }
-      );
+        }),
+      session
+    );
 
+    if (resp.data) {
       return redirect(`/lectures/${req.lectureId}`);
-    } catch (err: any) {
-      const errMessage =
-        err.response?.data?.messageTranslated ??
-        "알 수 없는 오류가 발생했습니다.";
-      session.flash("message", { text: errMessage, type: "error" });
-
+    } else {
+      session.flash("message", {
+        text: resp.error?.messageTranslated ?? STRING_UNKNOWN_ERROR,
+        type: "error",
+      });
       return json(null, {
         headers: {
           "Set-Cookie": await commitSession(session),
@@ -65,9 +65,11 @@ const Index = () => {
   const matches = useMatches();
   const theme = useTheme();
   const nav = useNavigate();
-  const quillStyle = useTypographyStyles()
+  const quillStyle = useTypographyStyles();
   const lecture = (
-    matches?.find(e => e.id == "routes/_sidebar.lectures_.$id")?.data as { lecture: Lecture } | undefined
+    matches?.find((e) => e.id == "routes/_sidebar.lectures_.$id")?.data as
+      | { lecture: Lecture }
+      | undefined
   )?.lecture;
 
   const handleMoveBack = () => nav(-1);
@@ -77,7 +79,7 @@ const Index = () => {
       sx={{
         ".ql-editor": {
           ...quillStyle,
-          minHeight: "300px"
+          minHeight: "300px",
         },
       }}
     >

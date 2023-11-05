@@ -9,48 +9,41 @@ import {
 } from "@mui/material";
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import axios from "axios";
 import { type Post } from "~/apis/post";
 import { getSession } from "~/session";
 import ModeIcon from "@mui/icons-material/Mode";
 import Gravatar from "react-gravatar";
 import { useTypographyStyles } from "~/utils/util";
 import { sanitize } from "isomorphic-dompurify";
+import api, { processResponse } from "~/axios.server";
+import { STRING_NOTICE_EMPTY } from "~/resources/strings";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("token")) {
-    return json(null);
+    return json({ data: null, error: null });
   }
 
-  try {
-    const resp = await axios.get<Post[]>(
-      `${process.env.API_URL}/api/v1/lecture/${params.id}/posts`,
-      {
-        headers: {
-          Authorization: session.get("token"),
-        },
-      }
-    );
+  const resp = await processResponse(
+    () =>
+      api.get<Post[]>(
+        `${process.env.API_URL}/api/v1/lecture/${params.id}/posts`,
+        {
+          headers: {
+            Authorization: session.get("token"),
+          },
+        }
+      ),
+    session
+  );
 
-    return json({ posts: resp.data, err: null });
-  } catch (err: any) {
-    return json({
-      posts: null,
-      err:
-        err.response?.data?.messageTranslated ??
-        "알 수 없는 오류가 발생했습니다.",
-    });
-  }
+  return json(resp);
 }
 
 const Index = () => {
   const theme = useTheme();
   const quillStyle = useTypographyStyles();
-  const { posts, err } = useLoaderData<typeof loader>() ?? {
-    posts: null,
-    err: null,
-  };
+  const { data: posts, error: err } = useLoaderData<typeof loader>();
   return posts?.length ? (
     <>
       {posts.map((it) => (
@@ -77,7 +70,6 @@ const Index = () => {
           </CardContent>
         </Card>
       ))}
-      
     </>
   ) : (
     <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>
@@ -94,7 +86,7 @@ const Index = () => {
         color={theme.colors.m3.outlineVariant}
         sx={{ wordBreak: "keep-all" }}
       >
-        {err ?? "공지사항이 없습니다."}
+        {err?.messageTranslated ?? STRING_NOTICE_EMPTY}
       </Typography>
     </Stack>
   );

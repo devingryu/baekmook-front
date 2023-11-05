@@ -19,8 +19,9 @@ import { useActionData, useSubmit } from "@remix-run/react";
 import { formToObj, objToForm } from "app/utils/util";
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/session";
-import axios from "axios";
 import { type PostRegisterRequest } from "app/apis/auth";
+import api from "~/axios.server";
+import { STRING_REGISTER_COMPLETE } from "~/resources/strings";
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -28,10 +29,10 @@ export async function action({ request }: ActionFunctionArgs) {
   const req = formToObj(body) as PostRegisterRequest | null;
   if (req != null) {
     try {
-      await axios.post(`${process.env.API_URL}/api/register`, req);
+      await api.post('/api/register', req);
 
       session.flash("message", {
-        text: `가입이 완료되었습니다!`,
+        text: STRING_REGISTER_COMPLETE,
         type: "success",
       });
       return redirect("/login", {

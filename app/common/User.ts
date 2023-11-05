@@ -6,3 +6,8 @@ export default interface User {
   role?: "master" | "lecturer" | "student",
   createdDate?: number,
 }
+
+export interface AuthInfo {
+  email: string,
+  password: string,
+}

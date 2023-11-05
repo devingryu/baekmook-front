@@ -13,8 +13,9 @@ import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { formToObj } from "~/utils/util";
-import axios from "axios";
 import { commitSession, getSession } from "app/session";
+import { type AuthInfo } from "~/common/User";
+import api from "~/axios.server";
 
 export async function loader({
   request
@@ -39,11 +40,12 @@ export async function action({
   const req = formToObj(body)
   if (req != null) {
     try {
-      const resp = await axios.post(`${process.env.API_URL}/api/login`, req)
+      const resp = await api.post(`/api/login`, req)
 
       session.flash("message", { text: `환영합니다, ${resp.data.me.name}님!`, type: 'success'})
       session.set("userInfo", resp.data.me)
       session.set("token", resp.data.token)
+      session.set("authInfo", req as AuthInfo)
       return redirect('/home', {
         headers: {
           "Set-Cookie": await commitSession(session)

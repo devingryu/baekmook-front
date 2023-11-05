@@ -30,7 +30,6 @@ import {
   useParams,
   useSubmit,
 } from "@remix-run/react";
-import axios from "axios";
 import { type Lecture } from "~/common/Lecture";
 import { getSession, commitSession } from "~/session";
 import ConstructionIcon from "@mui/icons-material/Construction";
@@ -39,11 +38,17 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ModeIcon from "@mui/icons-material/Mode";
 import { formToObj, objToForm } from "~/utils/util";
 import { useState } from "react";
+import {
+  STRING_LECTURE_ENROLL_COMPLETED,
+  STRING_LOGIN_REQUIRED,
+  STRING_UNKNOWN_ERROR,
+} from "~/resources/strings";
+import api, { processResponse } from "~/axios.server";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("token")) {
-    session.flash("message", { text: "로그인이 필요합니다.", type: "error" });
+    session.flash("message", { text: STRING_LOGIN_REQUIRED, type: "error" });
     return redirect("/login", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -51,26 +56,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     });
   }
 
-  try {
-    const resp = await axios.get<Lecture>(
-      `${process.env.API_URL}/api/v1/lecture/${params.id}`,
-      {
+  const resp = await processResponse(
+    () =>
+      api.get<Lecture>(`${process.env.API_URL}/api/v1/lecture/${params.id}`, {
         headers: {
           Authorization: session.get("token"),
         },
-      }
-    );
+      }),
+    session
+  );
 
-    return json({ lecture: resp.data });
-  } catch (err: any) {
-    return json(null);
-  }
+  return json(resp);
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("token")) {
-    session.flash("message", { text: "로그인이 필요합니다.", type: "error" });
+    session.flash("message", { text: STRING_LOGIN_REQUIRED, type: "error" });
     return redirect("/login", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -83,43 +85,35 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log(req);
 
   if (req.lectureId) {
-  try {
-    await axios.post(`${process.env.API_URL}/api/v1/lecture/join`, req, {
-      headers: {
-        Authorization: session.get("token"),
-      },
-    });
+    const resp = await processResponse(
+      () =>
+        api.post(`${process.env.API_URL}/api/v1/lecture/join`, req, {
+          headers: {
+            Authorization: session.get("token"),
+          },
+        }),
+      session
+    );
 
     session.flash("message", {
-      text: "수강신청이 완료되었습니다!",
-      type: "success",
+      text: resp.data
+        ? STRING_LECTURE_ENROLL_COMPLETED
+        : resp.error?.messageTranslated ?? STRING_UNKNOWN_ERROR,
+      type: resp.data ? "success" : "error",
     });
     return json(null, {
       headers: {
         "Set-Cookie": await commitSession(session),
       },
     });
-  } catch (err: any) {
-    session.flash("message", {
-      text:
-        err.response?.data?.messageTranslated ??
-        "알 수 없는 오류가 발생했습니다.",
-      type: "error",
-    });
-    return json(null, {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
+  } else {
+    return null;
   }
-} else {
-  return null
-}
 }
 
 const Index = () => {
   const data = useLoaderData<typeof loader>();
-  const lecture = data?.lecture;
+  const lecture = data?.data;
   const theme = useTheme();
   const nav = useNavigate();
   const loc = useLocation();

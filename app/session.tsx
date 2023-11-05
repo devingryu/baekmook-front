@@ -1,13 +1,15 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 import type User from "app/common/User";
 import type ToastMessage from "app/common/ToastMessage";
+import { type AuthInfo } from "app/common/User";
 
 export type SessionData = {
     userInfo: User
+    authInfo: AuthInfo
     token: string
 }
 
-type SessionFlashData = {
+export type SessionFlashData = {
     message: ToastMessage
 }
 

@@ -1,16 +1,17 @@
 import { Stack, Typography, useTheme } from "@mui/material";
 import { type LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import axios from "axios";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
 import { commitSession, getSession } from "~/session";
 import ModeIcon from "@mui/icons-material/Mode";
+import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
+import api, { processResponse } from "~/axios.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
   if (!session.has("token")) {
-    session.flash("message", { text: "로그인이 필요합니다.", type: "error" });
+    session.flash("message", { text: STRING_LOGIN_REQUIRED, type: "error" });
     return redirect("/login", {
       headers: {
         "Set-Cookie": await commitSession(session),
@@ -18,42 +19,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   }
 
-  try {
-    const resp = await axios.get<LecturesResponse>(
-      `${process.env.API_URL}/api/v1/lecture`,
-      {
+  const resp = await processResponse(
+    () =>
+      api.get<LecturesResponse>(`${process.env.API_URL}/api/v1/lecture`, {
         headers: {
           Authorization: session.get("token"),
         },
         params: {
-          isMine: true
-        }
-      }
-    );
-
-    return json(
-      { data: resp.data },
-      {
-        headers: {
-          "Set-Cookie": await commitSession(session),
+          isMine: true,
         },
-      }
-    );
-  } catch (err: any) {
-    return json(null);
-  }
+      }),
+    session
+  );
+  return json(resp);
 }
 
 const Index = () => {
   const data = useLoaderData<typeof loader>();
   const lectures = data?.data?.lectures;
   const theme = useTheme();
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
+
   return (
     <>
       {lectures ? (
-        <LectureList lectures={lectures} onClick={(id) => navigate(`/lectures/${id}`)} />
+        <LectureList
+          lectures={lectures}
+          onClick={(id) => navigate(`/lectures/${id}`)}
+        />
       ) : (
         <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>
           <ModeIcon
