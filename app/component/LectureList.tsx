@@ -10,6 +10,7 @@ import {
 import { type Lecture } from "~/common/Lecture";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Chip from "~/component/Chip";
+import { STRING_ENROLLED } from "~/resources/strings";
 
 export interface LectureListProps {
   lectures: Lecture[];
@@ -55,7 +56,7 @@ const LectureList = ({ lectures, showChip, onClick }: LectureListProps) => {
                         return acc ? acc + ", " + curr.name : curr.name;
                       }, "")}
                     </Typography>
-                    {showChip && it.involved && (<Chip sx={{ fontSize: "11px" }}>수강중</Chip>)}
+                    {showChip && it.involved && (<Chip sx={{ fontSize: "11px" }}>{STRING_ENROLLED}</Chip>)}
                   </Stack>
                 </Stack>
                 <ChevronRightIcon

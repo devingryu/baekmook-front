@@ -1,5 +1,6 @@
 import { type ActionFunctionArgs, redirect } from "@remix-run/node";
 import { commitSession, destroySession, getSession } from "app/session";
+import { STRING_GOODBYE_MESSAGE } from "~/resources/strings";
 
 export async function loader() {
   return redirect("/home");
@@ -10,7 +11,7 @@ export async function action({ request }: ActionFunctionArgs) {
   // const body = await request.formData()
   await destroySession(session);
   const newSession = await getSession();
-  newSession.flash("message", { text: "다음에 다시 만나요!", type: "success" });
+  newSession.flash("message", { text: STRING_GOODBYE_MESSAGE, type: "success" });
   return redirect("/home", {
     headers: {
       "Set-Cookie": await commitSession(newSession),

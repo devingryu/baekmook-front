@@ -8,6 +8,7 @@ import {
 import { Link, Outlet, useLocation } from "@remix-run/react";
 import { useAuth } from "~/utils/util";
 import AddIcon from "@mui/icons-material/Add";
+import { STRING_ENROLL, STRING_MY_LECTURE, STRING_OPEN_LECTURE } from "~/resources/strings";
 
 const Index = () => {
   const auth = useAuth();
@@ -18,17 +19,17 @@ const Index = () => {
   const tabs = isStudent
     ? [
         {
-          label: "내 강의",
+          label: STRING_MY_LECTURE,
           link: "/lectures",
         },
         {
-          label: "수강신청",
+          label: STRING_ENROLL,
           link: "/lectures/enroll",
         },
       ]
     : [
         {
-          label: "내 강의",
+          label: STRING_MY_LECTURE,
           link: "/lectures",
         },
       ];
@@ -71,7 +72,7 @@ const Index = () => {
             sx={{ ml: "auto" }}
             // onClick={() => onSubmit()}
           >
-            강의 개설
+            {STRING_OPEN_LECTURE}
           </Button>
         )}
       </Box>

@@ -16,6 +16,7 @@ import { formToObj } from "~/utils/util";
 import { commitSession, getSession } from "app/session";
 import { type AuthInfo } from "~/common/User";
 import { api } from "~/axios.server";
+import { STRING_EMAIL, STRING_LOGIN, STRING_LOGIN_PROCESSING, STRING_LOGIN_TITLE, STRING_PASSWORD, STRING_REGISTER, STRING_UNKNOWN_ERROR, STRING_WELCOME_MESSAGE } from "~/resources/strings";
 
 export async function loader({
   request
@@ -42,7 +43,7 @@ export async function action({
     try {
       const resp = await api.post(`/api/login`, req)
 
-      session.flash("message", { text: `환영합니다, ${resp.data.me.name}님!`, type: 'success'})
+      session.flash("message", { text: STRING_WELCOME_MESSAGE.format(resp.data.me.name), type: 'success'})
       session.set("userInfo", resp.data.me)
       session.set("token", resp.data.token)
       session.set("authInfo", req as AuthInfo)
@@ -52,7 +53,7 @@ export async function action({
         }
       })
     } catch (err: any) {
-      return err.response?.data?.messageTranslated ?? "알 수 없는 오류가 발생했습니다."
+      return err.response?.data?.messageTranslated ?? STRING_UNKNOWN_ERROR
     }
   }
 }
@@ -99,14 +100,14 @@ const CardContent = () => {
       <Stack direction="column" spacing={1} alignItems="center">
         <ModeIcon sx={{ width: "2em", height: "2em" }} />
         <Typography variant="h5" sx={{ fontWeight: "500" }}>
-          백묵 로그인
+          {STRING_LOGIN_TITLE}
         </Typography>
       </Stack>
       <Form method="post">
         <Stack direction="column" spacing={2.5}>
           <TextField
             name="email"
-            label="이메일"
+            label={STRING_EMAIL}
             variant="outlined"
             value={inputs.email}
             onChange={handleChange}
@@ -114,7 +115,7 @@ const CardContent = () => {
           />
           <TextField
             name="password"
-            label="비밀번호"
+            label={STRING_PASSWORD}
             type="password"
             variant="outlined"
             value={inputs.password}
@@ -124,7 +125,7 @@ const CardContent = () => {
           {actionData && <Typography variant="body2" color="red">{actionData}</Typography>}
           <Box sx={{ display: "flex" }}>
             <Button variant="text" component={Link} to="/register">
-              회원가입
+              {STRING_REGISTER}
             </Button>
             <Button
               variant="contained"
@@ -133,7 +134,7 @@ const CardContent = () => {
               disabled={navigation.state != 'idle' || !((inputs.email.length > 0) && (inputs.password.length > 0))}
               type="submit"
             >
-              {navigation.state == 'idle' ? "로그인" : "로그인 중…"}
+              {navigation.state == 'idle' ? STRING_LOGIN : STRING_LOGIN_PROCESSING}
             </Button>
           </Box>
         </Stack>

@@ -5,7 +5,7 @@ import { commitSession, getSession } from "~/session";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
-import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
+import { STRING_ENROLL_LECTURE_EMPTY, STRING_LOGIN_REQUIRED } from "~/resources/strings";
 import processResponse from "~/axios.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -63,7 +63,7 @@ const Index = () => {
             color={theme.colors.m3.outlineVariant}
             sx={{ wordBreak: "keep-all" }}
           >
-            수강 가능한 과목이 없습니다.
+            {STRING_ENROLL_LECTURE_EMPTY}
           </Typography>
         </Stack>
       )}

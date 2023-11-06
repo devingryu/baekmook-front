@@ -39,8 +39,15 @@ import ModeIcon from "@mui/icons-material/Mode";
 import { formToObj, objToForm } from "~/utils/util";
 import { useState } from "react";
 import {
+  STRING_CANCEL,
+  STRING_ENROLL,
+  STRING_ENROLL_CONFIRM_DIALOG_SUBTITLE,
+  STRING_ENROLL_CONFIRM_DIALOG_TITLE,
+  STRING_GO_BACK,
   STRING_LECTURE_ENROLL_COMPLETED,
+  STRING_LECTURE_NON_EXISTENT,
   STRING_LOGIN_REQUIRED,
+  STRING_NOTICE,
   STRING_UNKNOWN_ERROR,
 } from "~/resources/strings";
 import processResponse from "~/axios.server";
@@ -174,7 +181,7 @@ const Index = () => {
               onClick={handleOpenEnrollDialog}
               sx={{ m: "16px 0" }}
             >
-              수강신청
+              {STRING_ENROLL}
             </Button>
           )}
           {lecture.involved && (
@@ -188,7 +195,7 @@ const Index = () => {
                   }}
                 >
                   <Tabs value={0}>
-                    <Tab label="공지사항" />
+                    <Tab label={STRING_NOTICE} />
                   </Tabs>
                 </Box>
               ) : (
@@ -215,10 +222,10 @@ const Index = () => {
             </Fab>
           )}
           <Dialog open={openEnrollDialog} onClose={handleDismissEnrollDialog}>
-            <DialogTitle>수강신청하시겠습니까?</DialogTitle>
+            <DialogTitle>{STRING_ENROLL_CONFIRM_DIALOG_TITLE}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                한 번 수강신청하면 취소할 수 없습니다.
+                {STRING_ENROLL_CONFIRM_DIALOG_SUBTITLE}
               </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -226,10 +233,10 @@ const Index = () => {
                 onClick={handleDismissEnrollDialog}
                 sx={{ color: theme.colors.m3.outlineVariant }}
               >
-                취소
+                {STRING_CANCEL}
               </Button>
               <Button onClick={handleConfirmEnrollDialog} autoFocus>
-                수강신청
+                {STRING_ENROLL}
               </Button>
             </DialogActions>
           </Dialog>
@@ -249,7 +256,7 @@ const Index = () => {
             color={theme.colors.m3.outlineVariant}
             sx={{ wordBreak: "keep-all" }}
           >
-            존재하지 않는 강의입니다.
+            {STRING_LECTURE_NON_EXISTENT}
           </Typography>
           <Button
             variant="contained"
@@ -257,7 +264,7 @@ const Index = () => {
             onClick={handleMoveBack}
             sx={{ mt: 2 }}
           >
-            돌아가기
+            {STRING_GO_BACK}
           </Button>
         </Stack>
       )}

@@ -22,7 +22,7 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session";
 import { formToObj, useTypographyStyles } from "~/utils/util";
 import processResponse from "~/axios.server";
-import { STRING_UNKNOWN_ERROR } from "~/resources/strings";
+import { STRING_GO_BACK, STRING_LACK_OF_AUTHORITY, STRING_POST_SUBMIT, STRING_TITLE, STRING_UNKNOWN_ERROR, STRING_WRITE_CONTENT_PLACEHOLDER, STRING_WRITE_POST } from "~/resources/strings";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: quillCss },
@@ -87,12 +87,12 @@ const Index = () => {
       }}
     >
       <Typography variant="h5" fontWeight="bold">
-        게시글 작성
+        {STRING_WRITE_POST}
       </Typography>
       <Form method="post">
         <TextField
           name="title"
-          placeholder="제목"
+          placeholder={STRING_TITLE}
           variant="standard"
           fullWidth
           sx={{ mt: 1, mb: 2 }}
@@ -101,7 +101,7 @@ const Index = () => {
           {() => (
             <TextEditor
               theme="snow"
-              placeholder="본문 작성..."
+              placeholder={STRING_WRITE_CONTENT_PLACEHOLDER}
               onChange={setContent}
               value={content}
             />
@@ -116,7 +116,7 @@ const Index = () => {
             sx={{ marginLeft: "auto" }}
             type="submit"
           >
-            작성
+            {STRING_POST_SUBMIT}
           </Button>
         </Box>
       </Form>
@@ -136,7 +136,7 @@ const Index = () => {
         color={theme.colors.m3.outlineVariant}
         sx={{ wordBreak: "keep-all" }}
       >
-        권한이 없습니다.
+        {STRING_LACK_OF_AUTHORITY}
       </Typography>
       <Button
         variant="contained"
@@ -144,7 +144,7 @@ const Index = () => {
         onClick={handleMoveBack}
         sx={{ mt: 2 }}
       >
-        돌아가기
+        {STRING_GO_BACK}
       </Button>
     </Stack>
   );

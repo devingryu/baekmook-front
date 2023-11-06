@@ -21,7 +21,7 @@ import { redirect, type ActionFunctionArgs } from "@remix-run/node";
 import { commitSession, getSession } from "~/session";
 import { type PostRegisterRequest } from "app/apis/auth";
 import { api } from "~/axios.server";
-import { STRING_REGISTER_COMPLETE } from "~/resources/strings";
+import { STRING_EMAIL, STRING_EMAIL_REQUIRED, STRING_JOB, STRING_JOB_LECTURER, STRING_JOB_STUDENT, STRING_NAME, STRING_NAME_REQUIRED, STRING_PASSWORD, STRING_PASSWORD_CHECK, STRING_PASSWORD_DOES_NOT_MATCH, STRING_PASSWORD_REQUIRED, STRING_REGISTER, STRING_REGISTER_COMPLETE, STRING_REGISTER_TITLE, STRING_STUDENT_ID, STRING_STUDENT_ID_REQUIRED, STRING_UNKNOWN_ERROR } from "~/resources/strings";
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -43,7 +43,7 @@ export async function action({ request }: ActionFunctionArgs) {
     } catch (err: any) {
       return (
         err.response?.data?.messageTranslated ??
-        "알 수 없는 오류가 발생했습니다."
+        STRING_UNKNOWN_ERROR
       );
     }
   }
@@ -132,14 +132,14 @@ const CardContent = () => {
       <Stack direction="column" spacing={1} alignItems="center">
         <AssignmentIndIcon sx={{ width: "2em", height: "2em" }} />
         <Typography variant="h5" sx={{ fontWeight: "500" }}>
-          백묵 회원가입
+          {STRING_REGISTER_TITLE}
         </Typography>
       </Stack>
 
       <TextField
         error={errFlag.email}
-        helperText={errFlag.email ? "이메일을 입력해주세요." : null}
-        label="이메일"
+        helperText={errFlag.email ? STRING_EMAIL_REQUIRED : null}
+        label={STRING_EMAIL}
         variant="outlined"
         name="email"
         value={inputs.email}
@@ -148,8 +148,8 @@ const CardContent = () => {
       />
       <TextField
         error={errFlag.name}
-        helperText={errFlag.name ? "이름을 입력해주세요." : null}
-        label="이름"
+        helperText={errFlag.name ? STRING_NAME_REQUIRED : null}
+        label={STRING_NAME}
         variant="outlined"
         name="name"
         value={inputs.name}
@@ -158,8 +158,8 @@ const CardContent = () => {
       />
       <TextField
         error={errFlag.password}
-        helperText={errFlag.password ? "비밀번호를 입력해주세요." : null}
-        label="비밀번호"
+        helperText={errFlag.password ? STRING_PASSWORD_REQUIRED : null}
+        label={STRING_PASSWORD}
         type="password"
         variant="outlined"
         name="password"
@@ -171,10 +171,10 @@ const CardContent = () => {
         error={inputs.password !== inputs.passwordCheck}
         helperText={
           inputs.password !== inputs.passwordCheck
-            ? "비밀번호가 일치하지 않습니다."
+            ? STRING_PASSWORD_DOES_NOT_MATCH
             : null
         }
-        label="비밀번호 확인"
+        label={STRING_PASSWORD_CHECK}
         type="password"
         variant="outlined"
         name="passwordCheck"
@@ -184,8 +184,8 @@ const CardContent = () => {
       />
       <TextField
         error={errFlag.studentId}
-        helperText={errFlag.studentId ? "학번을 입력해주세요." : null}
-        label="학번"
+        helperText={errFlag.studentId ? STRING_STUDENT_ID_REQUIRED : null}
+        label={STRING_STUDENT_ID}
         name="studentId"
         value={inputs.studentId}
         onChange={handleChange}
@@ -193,18 +193,18 @@ const CardContent = () => {
         fullWidth
       />
       <FormControl>
-        <FormLabel>직업</FormLabel>
+        <FormLabel>{STRING_JOB}</FormLabel>
         <RadioGroup
           name="position"
           value={inputs.position}
           onChange={handleChange}
           row
         >
-          <FormControlLabel value="student" control={<Radio />} label="학생" />
+          <FormControlLabel value="student" control={<Radio />} label={STRING_JOB_STUDENT} />
           <FormControlLabel
             value="lecturer"
             control={<Radio />}
-            label="교수자"
+            label={STRING_JOB_LECTURER}
           />
         </RadioGroup>
       </FormControl>
@@ -219,7 +219,7 @@ const CardContent = () => {
         sx={{ flex: 1, marginLeft: 2 }}
         onClick={() => onSubmit()}
       >
-        회원가입
+        {STRING_REGISTER}
       </Button>
     </Stack>
   );

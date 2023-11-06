@@ -43,3 +43,20 @@ export const useTypographyStyles = () => {
 
   return nestedRules
 };
+
+declare global {
+  interface String {
+    format(...replacements: string[]): string;
+  }
+}
+
+// eslint-disable-next-line no-extend-native
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) { 
+    return typeof args[number] != 'undefined'
+      ? args[number]
+      : match
+    ;
+  });
+};

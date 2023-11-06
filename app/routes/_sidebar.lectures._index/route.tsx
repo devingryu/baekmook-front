@@ -5,7 +5,7 @@ import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
 import { commitSession, getSession } from "~/session";
 import ModeIcon from "@mui/icons-material/Mode";
-import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
+import { STRING_LOGIN_REQUIRED, STRING_MY_LECTURE_EMPTY } from "~/resources/strings";
 import { processResponse } from "~/axios.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -61,7 +61,7 @@ const Index = () => {
             color={theme.colors.m3.outlineVariant}
             sx={{ wordBreak: "keep-all" }}
           >
-            수강 중인 과목이 없습니다.
+            {STRING_MY_LECTURE_EMPTY}
           </Typography>
         </Stack>
       )}

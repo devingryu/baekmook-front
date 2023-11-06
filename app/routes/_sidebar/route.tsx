@@ -23,6 +23,7 @@ import {
 import { type OverridableComponent } from "@mui/material/OverridableComponent";
 import { useAuth } from "~/utils/util";
 import { useState } from "react";
+import { STRING_BAEKMOOK, STRING_DASHBOARD, STRING_LECTURE, STRING_LOGIN, STRING_LOGOUT, STRING_MYPAGE } from "~/resources/strings";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: sidebarCss },
@@ -119,13 +120,13 @@ const Sidebar = () => {
           Icon={DashboardIcon}
           linkTo="/home"
           isSelected={loc.pathname === "/home"}
-          caption="대시보드"
+          caption={STRING_DASHBOARD}
         />
         <SidebarItem
           Icon={HistoryEduIcon}
           linkTo="/lectures"
           isSelected={loc.pathname.startsWith('/lectures')}
-          caption="강의"
+          caption={STRING_LECTURE}
         />
       </Stack>
     </div>
@@ -177,7 +178,7 @@ const TopBar = ({isMobile}: TopBarProps) => {
           userSelect: "none",
         }}
       >
-        백묵
+        {STRING_BAEKMOOK}
       </Typography>
       {auth.userInfo ? (
         <>
@@ -233,7 +234,7 @@ const TopBar = ({isMobile}: TopBarProps) => {
                 fontSize: "15px",
               }}
             >
-              마이페이지
+              {STRING_MYPAGE}
             </Button>
             <Button
               variant="text"
@@ -247,7 +248,7 @@ const TopBar = ({isMobile}: TopBarProps) => {
                 fontSize: "15px",
               }}
             >
-              로그아웃
+              {STRING_LOGOUT}
             </Button>
           </Popover>
         </>
@@ -259,7 +260,7 @@ const TopBar = ({isMobile}: TopBarProps) => {
           disableElevation
           sx={{ marginLeft: "auto" }}
         >
-          로그인
+          {STRING_LOGIN}
         </Button>
       )}
     </Box>
