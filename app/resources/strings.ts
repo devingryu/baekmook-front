@@ -38,7 +38,12 @@ export const STRING_DASHBOARD = "대시보드"
 export const STRING_LECTURE = "강의"
 export const STRING_MYPAGE = "마이페이지"
 export const STRING_MY_LECTURE = "내 강의"
+
 export const STRING_OPEN_LECTURE = "강의 개설"
+export const STRING_LECTURE_NAME = "이름"
+export const STRING_LECTURE_DESCRIPTON = "소개문구"
+export const STRING_OPEN_LECTURE_COMPLETE = "강의 개설이 완료되었습니다!"
+
 export const STRING_NOTICE = "공지사항"
 export const STRING_WRITE_POST = "게시글 작성"
 export const STRING_TITLE = "제목"
