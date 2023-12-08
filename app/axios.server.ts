@@ -5,8 +5,8 @@ import type BaseResponse from "~/apis/serverError";
 import { isBaseResponse } from "~/apis/serverError";
 import { type AuthInfo } from "~/common/User";
 import { STRING_LOGIN_REQUIRED } from "~/resources/strings";
-import type { SessionData, SessionFlashData } from "~/session";
-import { commitSession, destroySession, getSession } from "~/session";
+import type { SessionData, SessionFlashData } from "~/session.server";
+import { commitSession, destroySession, getSession } from "~/session.server";
 
 export const api = axios.create({
   baseURL: process.env.API_URL,

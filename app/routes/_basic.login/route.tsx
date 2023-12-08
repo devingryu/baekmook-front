@@ -13,7 +13,7 @@ import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
 import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
 import { formToObj } from "~/utils/util";
-import { commitSession, getSession } from "app/session";
+import { commitSession, getSession } from "~/session.server";
 import { type AuthInfo } from "~/common/User";
 import { api } from "~/axios.server";
 import { STRING_EMAIL, STRING_LOGIN, STRING_LOGIN_PROCESSING, STRING_LOGIN_TITLE, STRING_PASSWORD, STRING_REGISTER, STRING_UNKNOWN_ERROR, STRING_WELCOME_MESSAGE } from "~/resources/strings";

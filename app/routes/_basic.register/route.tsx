@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useActionData, useSubmit } from "@remix-run/react";
 import { formToObj, objToForm } from "app/utils/util";
 import { redirect, type ActionFunctionArgs } from "@remix-run/node";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import { type PostRegisterRequest } from "app/apis/auth";
 import { api } from "~/axios.server";
 import { STRING_EMAIL, STRING_EMAIL_REQUIRED, STRING_JOB, STRING_JOB_LECTURER, STRING_JOB_STUDENT, STRING_NAME, STRING_NAME_REQUIRED, STRING_PASSWORD, STRING_PASSWORD_CHECK, STRING_PASSWORD_DOES_NOT_MATCH, STRING_PASSWORD_REQUIRED, STRING_REGISTER, STRING_REGISTER_COMPLETE, STRING_REGISTER_TITLE, STRING_STUDENT_ID, STRING_STUDENT_ID_REQUIRED, STRING_UNKNOWN_ERROR } from "~/resources/strings";

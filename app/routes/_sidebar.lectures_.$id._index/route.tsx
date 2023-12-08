@@ -10,7 +10,7 @@ import {
 import { json, type LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { type Post } from "~/apis/post";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import ModeIcon from "@mui/icons-material/Mode";
 import Gravatar from "react-gravatar";
 import { useTypographyStyles } from "~/utils/util";

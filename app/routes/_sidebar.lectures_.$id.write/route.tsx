@@ -19,7 +19,7 @@ import { ClientOnly } from "remix-utils/client-only";
 import { type Lecture } from "~/common/Lecture";
 import { TextEditor } from "~/component/TextEditor.client";
 import ConstructionIcon from "@mui/icons-material/Construction";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import { formToObj, useTypographyStyles } from "~/utils/util";
 import processResponse from "~/axios.server";
 import { STRING_GO_BACK, STRING_LACK_OF_AUTHORITY, STRING_POST_SUBMIT, STRING_TITLE, STRING_UNKNOWN_ERROR, STRING_WRITE_CONTENT_PLACEHOLDER, STRING_WRITE_POST } from "~/resources/strings";

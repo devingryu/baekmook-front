@@ -1,5 +1,5 @@
 import { type ActionFunctionArgs, redirect } from "@remix-run/node";
-import { commitSession, destroySession, getSession } from "app/session";
+import { commitSession, destroySession, getSession } from "~/session.server";
 import { STRING_GOODBYE_MESSAGE } from "~/resources/strings";
 
 export async function loader() {

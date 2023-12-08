@@ -31,7 +31,7 @@ import {
   useSubmit,
 } from "@remix-run/react";
 import { type Lecture } from "~/common/Lecture";
-import { getSession, commitSession } from "~/session";
+import { getSession, commitSession } from "~/session.server";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import Gravatar from "react-gravatar";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";

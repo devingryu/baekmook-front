@@ -107,6 +107,8 @@ const SidebarItem = ({
 
 const Sidebar = () => {
   const loc = useLocation();
+  const auth = useAuth();
+  
   return (
     <div className="sidenav">
       <Stack
@@ -122,12 +124,12 @@ const Sidebar = () => {
           isSelected={loc.pathname === "/home"}
           caption={STRING_DASHBOARD}
         />
-        <SidebarItem
+        {auth && <SidebarItem
           Icon={HistoryEduIcon}
           linkTo="/lectures"
           isSelected={loc.pathname.startsWith('/lectures')}
           caption={STRING_LECTURE}
-        />
+        />}
       </Stack>
     </div>
   );
@@ -180,12 +182,12 @@ const TopBar = ({isMobile}: TopBarProps) => {
       >
         {STRING_BAEKMOOK}
       </Typography>
-      {auth.userInfo ? (
+      {auth?.userInfo ? (
         <>
           <Gravatar
             style={{ marginLeft: "auto", borderRadius: "50%" }}
             size={40}
-            email={auth.userInfo.email}
+            email={auth?.userInfo.email}
             onClick={handleProfileClick}
           />
           <Popover
@@ -212,14 +214,14 @@ const TopBar = ({isMobile}: TopBarProps) => {
               <Gravatar
                 style={{ borderRadius: "50%" }}
                 size={42}
-                email={auth.userInfo.email}
+                email={auth?.userInfo.email}
               />
               <Stack direction="column" marginLeft={1}>
                 <Typography variant="body1" fontWeight="bold">
-                  {auth.userInfo?.name}
+                  {auth?.userInfo?.name}
                 </Typography>
                 <Typography variant="body2">
-                  {auth.userInfo?.studentId}
+                  {auth?.userInfo?.studentId}
                 </Typography>
               </Stack>
             </Stack>

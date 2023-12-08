@@ -16,7 +16,7 @@ import {
 } from "@remix-run/node";
 import { ThemeProvider } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
-import { commitSession, getSession } from "app/session";
+import { commitSession, getSession } from "~/session.server";
 import { useEffect } from "react";
 import { lightTheme } from "app/utils/themeAugmentation";
 

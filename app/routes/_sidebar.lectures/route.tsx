@@ -27,7 +27,7 @@ import {
 } from "~/resources/strings";
 import { useState } from "react";
 import { redirect, type ActionFunctionArgs, json } from "@remix-run/node";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import processResponse from "~/axios.server";
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -75,7 +75,7 @@ const Index = () => {
     name: "",
     description: "",
   });
-  const isStudent = auth.userInfo.role != "lecturer";
+  const isStudent = auth?.userInfo.role != "lecturer";
 
   const handleChange = ({
     target: { name, value },

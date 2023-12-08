@@ -3,7 +3,7 @@ import { type LoaderFunctionArgs, json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import ModeIcon from "@mui/icons-material/Mode";
 import {
   STRING_DEFAULT_EMPTY,

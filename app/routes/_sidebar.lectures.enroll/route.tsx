@@ -1,7 +1,7 @@
 import { Pagination, Stack, Typography, useTheme } from "@mui/material";
 import ModeIcon from "@mui/icons-material/Mode";
 import { type LoaderFunctionArgs, redirect, json } from "@remix-run/node";
-import { commitSession, getSession } from "~/session";
+import { commitSession, getSession } from "~/session.server";
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
