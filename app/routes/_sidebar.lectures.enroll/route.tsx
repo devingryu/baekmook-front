@@ -1,11 +1,14 @@
-import { Stack, Typography, useTheme } from "@mui/material";
+import { Pagination, Stack, Typography, useTheme } from "@mui/material";
 import ModeIcon from "@mui/icons-material/Mode";
 import { type LoaderFunctionArgs, redirect, json } from "@remix-run/node";
 import { commitSession, getSession } from "~/session";
-import { useLoaderData, useNavigate } from "@remix-run/react";
+import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
-import { STRING_ENROLL_LECTURE_EMPTY, STRING_LOGIN_REQUIRED } from "~/resources/strings";
+import {
+  STRING_DEFAULT_EMPTY,
+  STRING_LOGIN_REQUIRED,
+} from "~/resources/strings";
 import processResponse from "~/axios.server";
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -19,8 +22,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     });
   }
 
+  const url = new URL(request.url);
+  const page = url.searchParams.get("page");
+
   const { newSession, ...resp } = await processResponse<LecturesResponse>(
-    { method: "get", url: `/api/v1/lecture` },
+    { method: "get", url: `/api/v1/lecture`, params: { page } },
     session
   );
 
@@ -36,13 +42,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 const Index = () => {
   const { data } = useLoaderData<typeof loader>();
-  const lectures = data?.lectures;
   const theme = useTheme();
   const navigate = useNavigate();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const lectures = data?.lectures;
+  const totalPages = data?.totalPages;
+  const currentPage = +(searchParams.get("page") ?? 1) || 1;
+
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    page != 1
+      ? searchParams.set("page", page.toString())
+      : searchParams.delete("page");
+    setSearchParams(searchParams);
+  };
+
   return (
     <>
-      {lectures ? (
+      {lectures && lectures.length ? (
         <LectureList
           lectures={lectures}
           showChip={true}
@@ -63,10 +84,17 @@ const Index = () => {
             color={theme.colors.m3.outlineVariant}
             sx={{ wordBreak: "keep-all" }}
           >
-            {STRING_ENROLL_LECTURE_EMPTY}
+            {STRING_DEFAULT_EMPTY}
           </Typography>
         </Stack>
       )}
+      <Pagination
+        sx={{ mt: 3, display: "flex", justifyContent: "center" }}
+        count={totalPages}
+        page={currentPage}
+        disabled={currentPage <= 1}
+        onChange={handlePageChange}
+      />
     </>
   );
 };
