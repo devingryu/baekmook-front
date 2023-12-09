@@ -4,6 +4,7 @@ export default interface User {
   name: string,
   studentId: string,
   role?: "master" | "lecturer" | "student",
+  roleTranslated?: string,
   createdDate?: number,
 }
 

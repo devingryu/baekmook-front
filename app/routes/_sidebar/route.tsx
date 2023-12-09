@@ -230,6 +230,9 @@ const TopBar = ({isMobile}: TopBarProps) => {
               variant="text"
               startIcon={<AccountCircleIcon />}
               fullWidth
+              component={Link}
+              to="/mypage"
+              onClick={handlePopoverClose}
               sx={{
                 justifyContent: "flex-start",
                 padding: "10px 0 10px 20px",
