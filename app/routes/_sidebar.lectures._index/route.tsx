@@ -88,13 +88,15 @@ const Index = () => {
           </Typography>
         </Stack>
       )}
-      <Pagination
-        sx={{ mt: 3, display: "flex", justifyContent: "center" }}
-        count={totalPages}
-        page={currentPage}
-        disabled={currentPage <= 1}
-        onChange={handlePageChange}
-      />
+      {totalPages && (
+        <Pagination
+          sx={{ mt: 3, display: "flex", justifyContent: "center" }}
+          count={totalPages}
+          page={currentPage}
+          disabled={currentPage <= 1}
+          onChange={handlePageChange}
+        />
+      )}
     </>
   );
 };
