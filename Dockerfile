@@ -18,9 +18,8 @@ RUN yarn run build
 # Stage 3: Run app
 FROM node:20.10-alpine3.17
 
-# "609df9123d0d4c756031052925e70155a5102c26c5c59210aba9b48ddf2589c6"
 ENV PORT="1559" \
-    API_URL="http://localhost:1557" \
+    API_URL="http://host.docker.internal:1557" \
     SESSION_SECRET= 
 
 WORKDIR /app
