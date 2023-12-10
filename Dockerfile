@@ -1,12 +1,12 @@
 # Stage 1: Install dependencies
-FROM 20.10-alpine3.17 as deps
+FROM node:20.10-alpine3.17 as deps
 WORKDIR /app
 
 ADD package.json yarn.lock ./
 RUN yarn install
 
 # Stage 2: Build app
-FROM 20.10-alpine3.17 as build
+FROM node:20.10-alpine3.17 as build
 WORKDIR /app
 
 COPY --from=deps /app/node_modules /app/node_modules
@@ -16,7 +16,7 @@ ADD . .
 RUN yarn run build
 
 # Stage 3: Run app
-FROM 20.10-alpine3.17
+FROM node:20.10-alpine3.17
 
 # "609df9123d0d4c756031052925e70155a5102c26c5c59210aba9b48ddf2589c6"
 ENV PORT="1559" \
