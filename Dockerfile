@@ -28,5 +28,6 @@ WORKDIR /app
 COPY --from=deps /app/node_modules /app/node_modules
 COPY --from=build /app/build /app/build
 COPY --from=build /app/public /app/public
+ADD package.json yarn.lock ./
 
 CMD ["yarn", "start"]
