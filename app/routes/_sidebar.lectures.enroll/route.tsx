@@ -1,15 +1,24 @@
 import { Pagination, Stack, Typography, useTheme } from "@mui/material";
 import ModeIcon from "@mui/icons-material/Mode";
-import { type LoaderFunctionArgs, redirect, json } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect, json, type MetaFunction } from "@remix-run/node";
 import { commitSession, getSession } from "~/session.server";
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
 import {
   STRING_DEFAULT_EMPTY,
+  STRING_ENROLL,
   STRING_LOGIN_REQUIRED,
 } from "~/resources/strings";
 import processResponse from "~/axios.server";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: STRING_ENROLL,
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));

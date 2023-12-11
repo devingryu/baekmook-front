@@ -11,6 +11,7 @@ import {
   type ActionFunctionArgs,
   type LinksFunction,
   json,
+  type MetaFunction,
 } from "@remix-run/node";
 import { Form, useMatches, useNavigate } from "@remix-run/react";
 import { useState } from "react";
@@ -22,11 +23,37 @@ import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session.server";
 import { formToObj, useTypographyStyles } from "~/utils/util";
 import processResponse from "~/axios.server";
-import { STRING_GO_BACK, STRING_LACK_OF_AUTHORITY, STRING_POST_SUBMIT, STRING_TITLE, STRING_UNKNOWN_ERROR, STRING_WRITE_CONTENT_PLACEHOLDER, STRING_WRITE_POST } from "~/resources/strings";
+import {
+  STRING_ERROR,
+  STRING_GO_BACK,
+  STRING_LACK_OF_AUTHORITY,
+  STRING_POST_SUBMIT,
+  STRING_TITLE,
+  STRING_UNKNOWN_ERROR,
+  STRING_WRITE_CONTENT_PLACEHOLDER,
+  STRING_WRITE_POST,
+} from "~/resources/strings";
+import type { loader as lecturesLoader } from "~/routes/_sidebar.lectures_.$id/route";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: quillCss },
 ];
+
+export const meta: MetaFunction<
+  unknown,
+  { "routes/_sidebar.lectures_.$id": typeof lecturesLoader }
+> = ({ matches }) => {
+  const lectureName = matches.find(
+    (match) => match.id === "routes/_sidebar.lectures_.$id"
+  )?.data.data?.name;
+  return [
+    {
+      title: lectureName
+        ? `${STRING_WRITE_POST} | ${lectureName}`
+        : STRING_ERROR,
+    },
+  ];
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -35,7 +62,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   if (req?.lectureId) {
     const { newSession, ...resp } = await processResponse(
-      { method: "post", url: '/api/v1/lecture/write-post', data: req },
+      { method: "post", url: "/api/v1/lecture/write-post", data: req },
       session
     );
 

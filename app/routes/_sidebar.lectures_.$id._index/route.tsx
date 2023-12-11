@@ -7,7 +7,11 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { json, type LoaderFunctionArgs } from "@remix-run/node";
+import {
+  json,
+  type MetaFunction,
+  type LoaderFunctionArgs,
+} from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { type Post } from "~/apis/post";
 import { commitSession, getSession } from "~/session.server";
@@ -16,7 +20,12 @@ import Gravatar from "react-gravatar";
 import { useTypographyStyles } from "~/utils/util";
 import { sanitize } from "isomorphic-dompurify";
 import processResponse from "~/axios.server";
-import { STRING_NOTICE_EMPTY } from "~/resources/strings";
+import {
+  STRING_ERROR,
+  STRING_NOTICE,
+  STRING_NOTICE_EMPTY,
+} from "~/resources/strings";
+import type { loader as lecturesLoader } from "~/routes/_sidebar.lectures_.$id/route";
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -38,6 +47,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   );
 }
+
+export const meta: MetaFunction<
+  typeof loader,
+  { "routes/_sidebar.lectures_.$id": typeof lecturesLoader }
+> = ({ matches }) => {
+  const lectureName = matches.find(
+    (match) => match.id === "routes/_sidebar.lectures_.$id"
+  )?.data.data?.name;
+  return [
+    {
+      title: lectureName ? `${STRING_NOTICE} | ${lectureName}` : STRING_ERROR,
+    },
+  ];
+};
 
 const Index = () => {
   const theme = useTheme();

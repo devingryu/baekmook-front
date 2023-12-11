@@ -11,49 +11,66 @@ import {
 import ModeIcon from "@mui/icons-material/Mode";
 import { Form, Link, useActionData, useNavigation } from "@remix-run/react";
 import { useState } from "react";
-import { redirect, type ActionFunctionArgs, type LoaderFunctionArgs } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from "@remix-run/node";
 import { formToObj } from "~/utils/util";
 import { commitSession, getSession } from "~/session.server";
 import { type AuthInfo } from "~/common/User";
 import { api } from "~/axios.server";
-import { STRING_EMAIL, STRING_LOGIN, STRING_LOGIN_PROCESSING, STRING_LOGIN_TITLE, STRING_PASSWORD, STRING_REGISTER, STRING_UNKNOWN_ERROR, STRING_WELCOME_MESSAGE } from "~/resources/strings";
+import {
+  STRING_EMAIL,
+  STRING_LOGIN,
+  STRING_LOGIN_PROCESSING,
+  STRING_LOGIN_TITLE,
+  STRING_PASSWORD,
+  STRING_REGISTER,
+  STRING_UNKNOWN_ERROR,
+  STRING_WELCOME_MESSAGE,
+} from "~/resources/strings";
 
-export async function loader({
-  request
-}: LoaderFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  )
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: STRING_LOGIN_TITLE,
+    },
+  ];
+};
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
   if (session.has("token")) {
-    return redirect("/")
+    return redirect("/");
   }
 
-  return null
+  return null;
 }
 
-export async function action({
-  request,
-}: ActionFunctionArgs) {
-  const session = await getSession(
-    request.headers.get("Cookie")
-  )
-  const body = await request.formData()
-  const req = formToObj(body)
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get("Cookie"));
+  const body = await request.formData();
+  const req = formToObj(body);
   if (req != null) {
     try {
-      const resp = await api.post(`/api/login`, req)
+      const resp = await api.post(`/api/login`, req);
 
-      session.flash("message", { text: STRING_WELCOME_MESSAGE.format(resp.data.me.name), type: 'success'})
-      session.set("userInfo", resp.data.me)
-      session.set("token", resp.data.token)
-      session.set("authInfo", req as AuthInfo)
-      return redirect('/home', {
+      session.flash("message", {
+        text: STRING_WELCOME_MESSAGE.format(resp.data.me.name),
+        type: "success",
+      });
+      session.set("userInfo", resp.data.me);
+      session.set("token", resp.data.token);
+      session.set("authInfo", req as AuthInfo);
+      return redirect("/home", {
         headers: {
-          "Set-Cookie": await commitSession(session)
-        }
-      })
+          "Set-Cookie": await commitSession(session),
+        },
+      });
     } catch (err: any) {
-      return err.response?.data?.messageTranslated ?? STRING_UNKNOWN_ERROR
+      return err.response?.data?.messageTranslated ?? STRING_UNKNOWN_ERROR;
     }
   }
 }
@@ -84,12 +101,12 @@ const Index = () => {
 };
 
 const CardContent = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const [inputs, setInputs] = useState({
     email: "",
     password: "",
-  })
-  const actionData = useActionData<typeof action>()
+  });
+  const actionData = useActionData<typeof action>();
   const handleChange = ({
     target: { name, value },
   }: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -122,7 +139,11 @@ const CardContent = () => {
             onChange={handleChange}
             fullWidth
           />
-          {actionData && <Typography variant="body2" color="red">{actionData}</Typography>}
+          {actionData && (
+            <Typography variant="body2" color="red">
+              {actionData}
+            </Typography>
+          )}
           <Box sx={{ display: "flex" }}>
             <Button variant="text" component={Link} to="/register">
               {STRING_REGISTER}
@@ -131,10 +152,15 @@ const CardContent = () => {
               variant="contained"
               disableElevation
               sx={{ flex: 1, marginLeft: 2 }}
-              disabled={navigation.state != 'idle' || !((inputs.email.length > 0) && (inputs.password.length > 0))}
+              disabled={
+                navigation.state != "idle" ||
+                !(inputs.email.length > 0 && inputs.password.length > 0)
+              }
               type="submit"
             >
-              {navigation.state == 'idle' ? STRING_LOGIN : STRING_LOGIN_PROCESSING}
+              {navigation.state == "idle"
+                ? STRING_LOGIN
+                : STRING_LOGIN_PROCESSING}
             </Button>
           </Box>
         </Stack>

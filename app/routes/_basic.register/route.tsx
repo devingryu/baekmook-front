@@ -17,11 +17,41 @@ import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import { useState } from "react";
 import { useActionData, useSubmit } from "@remix-run/react";
 import { formToObj, objToForm } from "app/utils/util";
-import { redirect, type ActionFunctionArgs } from "@remix-run/node";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type MetaFunction,
+} from "@remix-run/node";
 import { commitSession, getSession } from "~/session.server";
 import { type PostRegisterRequest } from "app/apis/auth";
 import { api } from "~/axios.server";
-import { STRING_EMAIL, STRING_EMAIL_REQUIRED, STRING_JOB, STRING_JOB_LECTURER, STRING_JOB_STUDENT, STRING_NAME, STRING_NAME_REQUIRED, STRING_PASSWORD, STRING_PASSWORD_CHECK, STRING_PASSWORD_DOES_NOT_MATCH, STRING_PASSWORD_REQUIRED, STRING_REGISTER, STRING_REGISTER_COMPLETE, STRING_REGISTER_TITLE, STRING_STUDENT_ID, STRING_STUDENT_ID_REQUIRED, STRING_UNKNOWN_ERROR } from "~/resources/strings";
+import {
+  STRING_EMAIL,
+  STRING_EMAIL_REQUIRED,
+  STRING_JOB,
+  STRING_JOB_LECTURER,
+  STRING_JOB_STUDENT,
+  STRING_NAME,
+  STRING_NAME_REQUIRED,
+  STRING_PASSWORD,
+  STRING_PASSWORD_CHECK,
+  STRING_PASSWORD_DOES_NOT_MATCH,
+  STRING_PASSWORD_REQUIRED,
+  STRING_REGISTER,
+  STRING_REGISTER_COMPLETE,
+  STRING_REGISTER_TITLE,
+  STRING_STUDENT_ID,
+  STRING_STUDENT_ID_REQUIRED,
+  STRING_UNKNOWN_ERROR,
+} from "~/resources/strings";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: STRING_REGISTER_TITLE,
+    },
+  ];
+};
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -29,7 +59,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const req = formToObj(body) as PostRegisterRequest | null;
   if (req != null) {
     try {
-      await api.post('/api/register', req);
+      await api.post("/api/register", req);
 
       session.flash("message", {
         text: STRING_REGISTER_COMPLETE,
@@ -41,10 +71,7 @@ export async function action({ request }: ActionFunctionArgs) {
         },
       });
     } catch (err: any) {
-      return (
-        err.response?.data?.messageTranslated ??
-        STRING_UNKNOWN_ERROR
-      );
+      return err.response?.data?.messageTranslated ?? STRING_UNKNOWN_ERROR;
     }
   }
 }
@@ -200,7 +227,11 @@ const CardContent = () => {
           onChange={handleChange}
           row
         >
-          <FormControlLabel value="student" control={<Radio />} label={STRING_JOB_STUDENT} />
+          <FormControlLabel
+            value="student"
+            control={<Radio />}
+            label={STRING_JOB_STUDENT}
+          />
           <FormControlLabel
             value="lecturer"
             control={<Radio />}
