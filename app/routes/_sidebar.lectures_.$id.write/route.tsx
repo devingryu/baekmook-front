@@ -101,7 +101,7 @@ const Index = () => {
   return lecture?.lecturer ? (
     <Box
       sx={{
-        ".ql-editor": {
+        ".ql-container .ql-editor": {
           ...quillStyle,
           minHeight: "300px",
         },
