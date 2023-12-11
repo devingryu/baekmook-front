@@ -1,5 +1,10 @@
 import { Pagination, Stack, Typography, useTheme } from "@mui/material";
-import { type LoaderFunctionArgs, json, redirect, type MetaFunction } from "@remix-run/node";
+import {
+  type LoaderFunctionArgs,
+  json,
+  redirect,
+  type MetaFunction,
+} from "@remix-run/node";
 import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import type LecturesResponse from "~/common/Lecture";
 import LectureList from "~/component/LectureList";
@@ -97,14 +102,16 @@ const Index = () => {
           </Typography>
         </Stack>
       )}
-      {totalPages && (
+      {totalPages ? (
         <Pagination
           sx={{ mt: 3, display: "flex", justifyContent: "center" }}
           count={totalPages}
           page={currentPage}
-          disabled={currentPage <= 1}
+          disabled={totalPages <= 1}
           onChange={handlePageChange}
         />
+      ) : (
+        <></>
       )}
     </>
   );

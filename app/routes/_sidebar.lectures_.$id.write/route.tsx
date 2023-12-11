@@ -13,11 +13,10 @@ import {
   json,
   type MetaFunction,
 } from "@remix-run/node";
-import { Form, useMatches, useNavigate } from "@remix-run/react";
+import { Form, useNavigate, useRouteLoaderData } from "@remix-run/react";
 import { useState } from "react";
 import quillCss from "react-quill/dist/quill.snow.css";
 import { ClientOnly } from "remix-utils/client-only";
-import { type Lecture } from "~/common/Lecture";
 import { TextEditor } from "~/component/TextEditor.client";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import { commitSession, getSession } from "~/session.server";
@@ -92,15 +91,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
 const Index = () => {
   const [content, setContent] = useState("");
-  const matches = useMatches();
   const theme = useTheme();
   const nav = useNavigate();
   const quillStyle = useTypographyStyles();
-  const lecture = (
-    matches?.find((e) => e.id == "routes/_sidebar.lectures_.$id")?.data as
-      | { data: Lecture }
-      | undefined
-  )?.data;
+  const lecture = useRouteLoaderData<typeof lecturesLoader>("routes/_sidebar.lectures_.$id")?.data
 
   const handleMoveBack = () => nav(-1);
 

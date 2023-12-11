@@ -1,5 +1,5 @@
 import { Grid, Typography } from "@mui/material";
-import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect, type MetaFunction } from "@remix-run/node";
 import {
   STRING_EMAIL,
   STRING_JOB,
@@ -11,6 +11,14 @@ import {
 } from "~/resources/strings";
 import { commitSession, getSession } from "~/session.server";
 import { useAuth } from "~/utils/util";
+
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: STRING_MYPAGE,
+    },
+  ];
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
