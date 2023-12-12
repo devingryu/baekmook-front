@@ -1,6 +1,9 @@
 export const STRING_BAEKMOOK = "백묵"
 export const STRING_REGISTER_COMPLETE = "가입이 완료되었습니다!"
+export const STRING_LOGIN_PROMPT = "로그인하여 백묵의 모든 서비스를 이용하세요!"
+export const STRING_WORKING_ON_LECTURER_DASHBOARD = "대시보드가 공사중입니다."
 export const STRING_UNKNOWN_ERROR = "알 수 없는 오류가 발생했습니다."
+export const STRING_TIMELINE = "타임라인"
 
 export const STRING_ENROLL = "수강신청"
 export const STRING_ENROLLED = "수강중"
@@ -45,6 +48,7 @@ export const STRING_LECTURE_DESCRIPTON = "소개문구"
 export const STRING_OPEN_LECTURE_COMPLETE = "강의 개설이 완료되었습니다!"
 
 export const STRING_NOTICE = "공지사항"
+export const STRING_MANAGE_STUDENTS = "수강생 관리"
 export const STRING_WRITE_POST = "게시글 작성"
 export const STRING_TITLE = "제목"
 export const STRING_WRITE_CONTENT_PLACEHOLDER = "본문 작성..."

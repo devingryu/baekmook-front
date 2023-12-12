@@ -5,6 +5,7 @@ export interface Lecture {
     name: string,
     description?: string,
     lecturers: User[],
+    students?: User[],
     involved: boolean,
     lecturer: boolean,
 }

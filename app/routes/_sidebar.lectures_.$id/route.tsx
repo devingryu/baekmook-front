@@ -18,7 +18,7 @@ import {
   redirect,
   type LoaderFunctionArgs,
   json,
-  type ActionFunctionArgs
+  type ActionFunctionArgs,
 } from "@remix-run/node";
 import {
   Link,
@@ -47,6 +47,7 @@ import {
   STRING_LECTURE_ENROLL_COMPLETED,
   STRING_LECTURE_NON_EXISTENT,
   STRING_LOGIN_REQUIRED,
+  STRING_MANAGE_STUDENTS,
   STRING_NOTICE,
   STRING_UNKNOWN_ERROR,
 } from "~/resources/strings";
@@ -68,7 +69,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     session
   );
 
-  return json(resp);
+  return json(
+    resp,
+    newSession && {
+      headers: {
+        "Set-Cookie": await commitSession(newSession),
+      },
+    }
+  );
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -196,6 +204,7 @@ const Index = () => {
                 >
                   <Tabs value={0}>
                     <Tab label={STRING_NOTICE} />
+                    <Tab label={STRING_MANAGE_STUDENTS} />
                   </Tabs>
                 </Box>
               ) : (

@@ -1,3 +1,4 @@
+import { type Lecture } from "~/common/Lecture"
 import type User from "~/common/User"
 
 export interface Post {
@@ -7,4 +8,5 @@ export interface Post {
   creationTime: number
   creationTimeFormatted: string
   registerer: User
+  lecture?: Lecture
 }
