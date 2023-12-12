@@ -6,6 +6,7 @@ import {
 } from "@remix-run/node";
 import {
   STRING_DASHBOARD,
+  STRING_DEFAULT_EMPTY,
   STRING_LOGIN,
   STRING_LOGIN_PROMPT,
   STRING_TIMELINE,
@@ -19,6 +20,7 @@ import { commitSession, getSession } from "~/session.server";
 import { type Post } from "~/apis/post";
 import processResponse from "~/axios.server";
 import PostCard from "~/component/PostCard";
+import ModeIcon from "@mui/icons-material/Mode";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request.headers.get("Cookie"));
@@ -96,9 +98,25 @@ const Index = () => {
           >
             {STRING_TIMELINE}
           </Typography>
-          { data && data?.map( it =>
+          { data && data.length ? data?.map( it =>
             <PostCard post={it} key={it.id} onClick={handlePostClick}/>
-          )}
+          ) : <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>
+          <ModeIcon
+            sx={{
+              width: "128px",
+              height: "128px",
+              color: theme.colors.m3.outlineVariant,
+            }}
+          />
+          <Typography
+            variant="h5"
+            textAlign="center"
+            color={theme.colors.m3.outlineVariant}
+            sx={{ wordBreak: "keep-all" }}
+          >
+            {STRING_DEFAULT_EMPTY}
+          </Typography>
+        </Stack>}
         </>
       ) : (
         <Stack direction="column" alignItems="center" sx={{ mt: 3 }}>
