@@ -7,9 +7,13 @@ export const STRING_TIMELINE = "타임라인"
 
 export const STRING_ENROLL = "수강신청"
 export const STRING_ENROLLED = "수강중"
+export const STRING_REMOVAL = "제적"
 export const STRING_ENROLL_CONFIRM_DIALOG_TITLE = "정말 수강신청하시겠습니까?"
 export const STRING_ENROLL_CONFIRM_DIALOG_SUBTITLE = "한 번 수강신청하면 탈출할 수 없습니다."
 export const STRING_LECTURE_ENROLL_COMPLETED = "수강신청이 완료되었습니다!"
+export const STRING_WITHDRAWAL_CONFIRM_DIALOG_TITLE = "정말 {0}을(를) 제적하시겠습니까?"
+export const STRING_WITHDRAWAL_CONFIRM_DIALOG_SUBTITLE = "한번 제적하면 취소할 수 없습니다."
+export const STRING_WITHDRAWAL_COMPLETED = "제적이 완료되었습니다."
 export const STRING_NOTICE_EMPTY = "공지사항이 없습니다."
 export const STRING_CANCEL = "취소"
 

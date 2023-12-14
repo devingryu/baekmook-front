@@ -127,6 +127,11 @@ const Index = () => {
   const submit = useSubmit();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  const tabs = [
+    { label: STRING_NOTICE, value: `/lectures/${params.id}` },
+    ... (lecture?.lecturer ? [{ label: STRING_MANAGE_STUDENTS, value: `/lectures/${params.id}/manage` }] : []),
+  ];
+
   const [openEnrollDialog, setOpenEnrollDialog] = useState(false);
 
   const useTab = !loc.pathname.endsWith("write");
@@ -202,9 +207,10 @@ const Index = () => {
                     position: "sticky",
                   }}
                 >
-                  <Tabs value={0}>
-                    <Tab label={STRING_NOTICE} />
-                    <Tab label={STRING_MANAGE_STUDENTS} />
+                  <Tabs value={loc.pathname}>
+                    { tabs.map(tab => (
+                      <Tab {...tab} key={tab.value} component={Link} to={tab.value}/>
+                    ))}
                   </Tabs>
                 </Box>
               ) : (
