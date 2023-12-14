@@ -2,7 +2,7 @@
   <img src="https://github.com/devingryu/baekmook-front/assets/79868575/c4df8609-23a7-4bdf-a4b2-b6168fc6e73b" />
 </p>
 
-[Live Server](https://bm.devingryu.com) | [백엔드 Git](https://github.com/devingryu/baekmook-back)
+[Live Server](https://bm.devingryu.com) | [백엔드 Git](https://github.com/devingryu/baekmook-back) | [프론트엔드 설정 문서](https://github.com/devingryu/baekmook-front/blob/master/SETUP.md)
 
 ## 프로젝트 소개
 
