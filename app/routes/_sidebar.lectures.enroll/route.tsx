@@ -35,7 +35,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const page = url.searchParams.get("page");
 
   const { newSession, ...resp } = await processResponse<LecturesResponse>(
-    { method: "get", url: `/api/v1/lecture`, params: { page } },
+    { method: "get", url: `/api/v1/lecture`, params: { n: 10, page } },
     session
   );
 

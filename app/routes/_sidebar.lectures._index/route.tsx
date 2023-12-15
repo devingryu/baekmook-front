@@ -42,7 +42,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     {
       method: "get",
       url: "/api/v1/lecture",
-      params: { isMine: true, page },
+      params: { n: 10, isMine: true, page },
     },
     session
   );
