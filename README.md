@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://github.com/devingryu/baekmook-front/assets/79868575/c4df8609-23a7-4bdf-a4b2-b6168fc6e73b" />
+  <img src="https://github.com/devingryu/baekmook-front/assets/79868575/de1c91da-1544-45a2-9cd0-fa498f6771d7" />
 </p>
 
 [Live Server](https://bm.devingryu.com) | [백엔드 Git](https://github.com/devingryu/baekmook-back) | [프론트엔드 설정 문서](https://github.com/devingryu/baekmook-front/blob/master/SETUP.md)
 
 ## 프로젝트 소개
 
-백묵은 간단한 온라인 교육 플랫폼입니다.
+백묵은 학습 관리 시스템(LMS) 토이 프로젝트입니다.
 
 현재는 가장 기본적인 기능들만 제공하며, 구현된 기능은:
  - 회원가입, 로그인, 로그아웃
